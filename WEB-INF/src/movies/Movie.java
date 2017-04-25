@@ -16,11 +16,12 @@ public class Movie {
     public String trailerURL;
 
 
-    public Movie(String id, String year, String title, String director) {
+    public Movie(String id, String year, String title, String director, String bannerURL) {
         this.id = id;
         this.year = year;
         this.title = title;
         this.director = director;
+        this.bannerURL = bannerURL;
         this.genres = new ArrayList<>();
         this.stars = new ArrayList<>();
     }

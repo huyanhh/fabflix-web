@@ -145,8 +145,9 @@ public class MovieList extends HttpServlet {
                     String resultYear = rs.getString("year");
                     String resultTitle = rs.getString("title");
                     String resultDirector = rs.getString("director");
+                    String resultBanner = rs.getString("banner_url");
 
-                    Movie movie = new Movie(resultId, resultYear, resultTitle, resultDirector);
+                    Movie movie = new Movie(resultId, resultYear, resultTitle, resultDirector, resultBanner);
 
 
 //                    out.println("<tr>");

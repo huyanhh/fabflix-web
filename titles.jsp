@@ -90,19 +90,84 @@
                 </div>
 
                 <div class="js-categories-seasonal js-block-list list">
-                    <%--<table border="0" cellpadding="0" cellspacing="0" width="100%">--%>
-                        <%--<tbody>--%>
-                        <%--</tbody>--%>
-                    <%--</table>--%>
-                    <%
-                        List<Movie> movies = (List<Movie>) request.getAttribute("movies");
-                        for (Movie movie : movies ) {
-                            out.println("<br/>" + movie.id);
-                            out.println("<br/>" + movie.title);
-                            out.println("<br/>" + movie.year);
-                            out.println("<br/>" + movie.director);
-                        }
-                    %>
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                        <tbody>
+                        <tr>
+                            <td class="borderClass bgColor1" valign="top" width="50"></td>
+                            <td class="borderClass bgColor1 ac fw-b" valign="top">Title</td>
+                            <td class="borderClass bgColor1 ac fw-b" width="45" nowrap="">
+                                <a href="?letter=A&amp;sy=0&amp;sm=0&amp;sd=0&amp;ey=0&amp;em=0&amp;ed=0&amp;o=6&amp;w=1">Year<i
+                                    class="fa fa-sort ml2"></i></a></td>
+                            <td class="borderClass bgColor1 ac fw-b" width="40" nowrap="">
+                                <a href="?letter=A&amp;sy=0&amp;sm=0&amp;sd=0&amp;ey=0&amp;em=0&amp;ed=0&amp;o=4&amp;w=1">Eps.<i
+                                    class="fa fa-sort ml2"></i></a></td>
+                            <td class="borderClass bgColor1 ac fw-b" width="50" nowrap="">
+                                <a href="?letter=A&amp;sy=0&amp;sm=0&amp;sd=0&amp;ey=0&amp;em=0&amp;ed=0&amp;o=3&amp;w=1">Score<i
+                                    class="fa fa-sort ml2"></i></a></td>
+                        </tr>
+                        <tr>
+                            <td class="borderClass bgColor0" valign="top" width="50">
+                                <div class="picSurround">
+                                    <a class="hoverinfo_trigger" href="https://myanimelist.net/anime/320/A_Kite"
+                                       id="sarea320" rel="#sinfo320">
+                                        <img width="50" height="70" alt="A Kite" border="0"
+                                             data-src="https://myanimelist.cdn-dena.com/r/50x70/images/anime/3/61495.webp?s=a40ff43509a7b064dfee81aefcd07640"
+                                             data-srcset="https://myanimelist.cdn-dena.com/r/50x70/images/anime/3/61495.webp?s=a40ff43509a7b064dfee81aefcd07640 1x, https://myanimelist.cdn-dena.com/r/100x140/images/anime/3/61495.webp?s=dc18b0fbee25dff309757257935b7b16 2x"
+                                             class=" lazyloaded"
+                                             srcset="https://myanimelist.cdn-dena.com/r/50x70/images/anime/3/61495.webp?s=a40ff43509a7b064dfee81aefcd07640 1x, https://myanimelist.cdn-dena.com/r/100x140/images/anime/3/61495.webp?s=dc18b0fbee25dff309757257935b7b16 2x"
+                                             src="https://myanimelist.cdn-dena.com/r/50x70/images/anime/3/61495.webp?s=a40ff43509a7b064dfee81aefcd07640">
+                                    </a>
+                                </div>
+                            </td>
+                            <td class="borderClass bgColor0" valign="top">
+                                <div id="sarea320">
+                                    <div class="hoverinfo left bottom" id="sinfo320" rel="a320"
+                                         style="left: 129.859px; top: -25px; display: none;">
+                                        <div class="hoverinfo-contaniner"></div>
+                                    </div>
+                                </div>
+                                <a class="hoverinfo_trigger fw-b fl-l" href="https://myanimelist.net/anime/320/A_Kite"
+                                   id="sinfo320" rel="#sinfo320" style="display: inline-block;">
+                                    <strong>A Kite</strong></a>
+                                <a href="https://myanimelist.net/login.php?error=login_required&amp;from=%2Fanime.php%3Fletter%3DA"
+                                   title="Quick add anime to my list" class="button_add ml8">add</a>
+
+                                <div class="pt4">Sawa is a school girl, an orphan, and an assassin. She is being
+                                    controlled by a corrupt cop who gives her targets to kill, detailing to her the
+                                    crimes these men have committed in order to justify thei...<a
+                                            href="https://myanimelist.net/anime/320/A_Kite">read more.</a></div>
+                            </td>
+                            <td class="borderClass ac bgColor0" width="45">
+                                OVA
+                            </td>
+                            <td class="borderClass ac bgColor0" width="40">
+                                2
+                            </td>
+                            <td class="borderClass ac bgColor0" width="50">
+                                6.70
+                            </td>
+                        </tr>
+                        <%
+                            //TODO krishna here
+                            List<Movie> movies = (List<Movie>) request.getAttribute("movies");
+                            for (Movie movie : movies ) {
+                                out.println("<tr>");
+                                out.println("<td class=\"borderClass bgColor0\" valign=\"top\" width=\"50\">");
+                                out.println("<img width=\"50\" height=\"70\" border=\"0\" src=\"" + movie.bannerURL + "\">");
+                                out.println("</td>");
+                                out.println("<td class=\"borderClass bgColor0\" valign=\"top\">" +
+                                        "<a href=//TODO>" +
+                                        "<strong>" +
+                                        movie.title + "</strong>" +
+                                        "</a>");
+
+                                out.println("<td class=\"borderClass ac bgColor0\" width=\"50\">" + movie.year + "</td>");
+                                out.println("</tr>");
+                            }
+                        %>
+
+                        </tbody>
+                    </table>
                 </div>
 
                 <div class="anime-manga-search pb24">
