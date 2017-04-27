@@ -6,7 +6,7 @@ javac -classpath "../../lib/servlet-api.jar:../../lib/mysql-connector-java-5.1.4
 
 Styling taken from [myanimelist](https://myanimelist.net)
 
-###Changes
+### Changes
 
 - removed all ads
 - replaced images with images from database
