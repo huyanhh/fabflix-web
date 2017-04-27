@@ -103,13 +103,21 @@
                                     <%--class="fa fa-sort ml2"></i></a></td>--%>
                             <td class="borderClass bgColor1 ac fw-b" width="135" nowrap="">
                                 <%
-                                    String options = "&movieGenre=";
+                                    String options = "";
                                     String genreInstance = request.getParameter("movieGenre");
-                                    if (genreInstance.equals("null")) {
-                                        options = "";
-                                        genreInstance = "";
+                                    String titleInstance = request.getParameter("movieTitle");
+                                    String directorInstance = request.getParameter("movieDirector");
+                                    if (genreInstance != null) {
+                                        options += "&genre=" + genreInstance;
                                     }
-                                    out.println("<a href='./MovieList?method=AscYear" + options + genreInstance + "'>Asc </a> &nbsp <a href='./MovieList?method=DescYear" + options + genreInstance + "'> Desc</a></td>");
+                                    if (titleInstance != null) {
+                                        options += "&title=" + titleInstance;
+                                    }
+                                    if (directorInstance != null) {
+                                        options += "&director=" + directorInstance;
+                                    }
+
+                                out.println("<a href='./MovieList?method=AscYear" + options + "'>Asc </a> &nbsp <a href='./MovieList?method=DescYear" + options + "'> Desc</a></td>");
                                 %>
                                 <a href="">Year<i
                                     class="fa fa-sort ml2"></i></a></td>

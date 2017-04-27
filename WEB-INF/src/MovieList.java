@@ -125,9 +125,8 @@ public class MovieList extends HttpServlet {
                 }
             } else { //otherwise perform same query for search and browse by title
                 strToFormat = "select * from movies where title like '%s' and year like '%s' and director like '%s' and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like '%s' and last_name like '%s'));";
-
                 if (method == null || method.isEmpty()){
-                    strToFormat = "select * from movies where title like '%s' and year like '%s' and director like '%s' and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like '%s' and last_name like '%s')) order by title;";
+                    strToFormat = "select * from movies where title like '%s' and year like '%s' and director like '%s' and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like '%s' and last_name like '%s'));";
                     query = String.format(strToFormat, movieTitle, movieYear, movieDirector, starFirstName, starLastName);
                 } else {
                     switch (method) {
@@ -140,7 +139,7 @@ public class MovieList extends HttpServlet {
                             query = String.format(strToFormat, movieTitle, movieYear, movieDirector, starFirstName, starLastName);
                             break;
                         case "AscYear":
-                            strToFormat = strToFormat + "order by year asc";
+                            strToFormat = "select * from movies where title like '%s' and year like '%s' and director like '%s' and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like '%s' and last_name like '%s')) order by title;";
                             query = String.format(strToFormat, movieTitle, movieYear, movieDirector, starFirstName, starLastName);
                             break;
                         case "DescYear":
