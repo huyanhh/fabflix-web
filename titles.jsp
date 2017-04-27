@@ -95,14 +95,23 @@
                         <tr>
                             <td class="borderClass bgColor1" valign="top" width="50"></td>
                             <td class="borderClass bgColor1 ac fw-b" valign="top">Title</td>
-                            <td class="borderClass bgColor1 ac fw-b" width="45" nowrap="">
-                                <a href="?letter=A&amp;sy=0&amp;sm=0&amp;sd=0&amp;ey=0&amp;em=0&amp;ed=0&amp;o=6&amp;w=1">Year<i
-                                    class="fa fa-sort ml2"></i></a></td>
-                            <td class="borderClass bgColor1 ac fw-b" width="40" nowrap="">
-                                <a href="?letter=A&amp;sy=0&amp;sm=0&amp;sd=0&amp;ey=0&amp;em=0&amp;ed=0&amp;o=4&amp;w=1">Eps.<i
-                                    class="fa fa-sort ml2"></i></a></td>
-                            <td class="borderClass bgColor1 ac fw-b" width="50" nowrap="">
-                                <a href="?letter=A&amp;sy=0&amp;sm=0&amp;sd=0&amp;ey=0&amp;em=0&amp;ed=0&amp;o=3&amp;w=1">Score<i
+                            <%--<td class="borderClass bgColor1 ac fw-b" width="45" nowrap="">--%>
+                                <%--<a href="?letter=A&amp;sy=0&amp;sm=0&amp;sd=0&amp;ey=0&amp;em=0&amp;ed=0&amp;o=6&amp;w=1"><i--%>
+                                    <%--class="fa fa-sort ml2"></i></a></td>--%>
+                            <%--<td class="borderClass bgColor1 ac fw-b" width="40" nowrap="">--%>
+                                <%--<a href="?letter=A&amp;sy=0&amp;sm=0&amp;sd=0&amp;ey=0&amp;em=0&amp;ed=0&amp;o=4&amp;w=1"><i--%>
+                                    <%--class="fa fa-sort ml2"></i></a></td>--%>
+                            <td class="borderClass bgColor1 ac fw-b" width="135" nowrap="">
+                                <%
+                                    String options = "&movieGenre=";
+                                    String genreInstance = request.getParameter("movieGenre");
+                                    if (genreInstance.equals("null")) {
+                                        options = "";
+                                        genreInstance = "";
+                                    }
+                                    out.println("<a href='./MovieList?method=AscYear" + options + genreInstance + "'>Asc </a> &nbsp <a href='./MovieList?method=DescYear" + options + genreInstance + "'> Desc</a></td>");
+                                %>
+                                <a href="">Year<i
                                     class="fa fa-sort ml2"></i></a></td>
                         </tr>
                         <tr>
