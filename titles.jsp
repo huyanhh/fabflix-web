@@ -3,7 +3,10 @@
                 java.io.IOException"
 %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page import="movies.Movie" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
 <%
 
     //Get session attributes
@@ -15,6 +18,47 @@
     //Check to see if the user has logged in. If not, redirect user to the login page.
     if (loggedIn == null) {
         out.println("<script> window.location.replace('index.html'); </script>");
+    }
+
+    //Get total movie quantity in shopping cart
+    int totalQuantity = 0;
+    ArrayList<Movie> shoppingCart = new ArrayList<Movie>();
+    if (session.getAttribute("shoppingCart") != null){
+        shoppingCart = (ArrayList<Movie>)session.getAttribute("shoppingCart");
+        for (int i = 0; i < shoppingCart.size(); i++){
+            totalQuantity += Integer.parseInt(shoppingCart.get(i).quantity);
+        }
+    }
+
+    //Get URL parameters
+    String urlMovieTitle = (String)session.getAttribute("urlMovieTitle");
+    String urlMovieYear = (String)session.getAttribute("urlMovieYear");
+    String urlMovieGenre = (String)session.getAttribute("urlMovieGenre");
+    String urlMovieDirector = (String)session.getAttribute("urlMovieDirector");
+    String urlStarFirstName = (String)session.getAttribute("urlStarFirstName");
+    String urlStarLastName = (String)session.getAttribute("urlStarLastName");
+
+    //Create a list of URL parameters
+    HashMap<String,String> urlParams = new HashMap<String,String>();
+
+    //Add url parameters if they are not null
+    if (urlMovieTitle != null){
+        urlParams.put("movieTitle",urlMovieTitle);
+    }
+    if (urlMovieYear != null){
+        urlParams.put("movieYear",urlMovieYear);
+    }
+    if (urlMovieGenre != null){
+        urlParams.put("movieGenre",urlMovieGenre);
+    }
+    if (urlMovieDirector != null){
+        urlParams.put("movieDirector",urlMovieDirector);
+    }
+    if (urlStarFirstName != null){
+        urlParams.put("starFirstName",urlStarFirstName);
+    }
+    if (urlStarLastName != null){
+        urlParams.put("starLastName",urlStarLastName);
     }
 
 %>
@@ -58,6 +102,21 @@
                     </li>
                     <li class="small">
                         <a href="../browse.jsp" class="non-link">Browse</a>
+                    </li>
+                    <%
+                    if (totalQuantity < 10){
+                        out.println("<li class=\"large\" style = 'width:160px;'>");
+                    } else if (totalQuantity < 100){
+                        out.println("<li class=\"large\" style = 'width:170px;'>");
+                    } else if (totalQuantity < 1000){
+                        out.println("<li class=\"large\" style = 'width:180px;'>");
+                    } else if (totalQuantity < 10000){
+                        out.println("<li class=\"large\" style = 'width:190px;'>");
+                    } else {
+                        out.println("<li class=\"large\" style = 'width:200px;'>");
+                    }
+                    %>
+                        <a href="../shoppingCart.jsp" class="non-link">Checkout (<% out.println(totalQuantity); %> items) </a>
                     </li>
                 </ul>
             </div>
@@ -178,7 +237,27 @@
                                         movie.title + "</strong>" +
                                         "</a>");
 
-                                out.println("<td class=\"borderClass ac bgColor0\" width=\"50\">" + movie.year + "</td>");
+                                out.println("<td class=\"borderClass ac bgColor0\" width=\"45\">" + movie.year + "</td>");
+                                out.println("<td class=\"borderClass ac bgColor0\" width=\"40\">");
+                                out.println("<form action = '/servlet/MovieList' method = 'get'>");
+
+                                int quant = 0;
+                                for (int i = 0; i < shoppingCart.size(); i++){
+                                    if (shoppingCart.get(i).id.equals(movie.id) && Integer.parseInt(shoppingCart.get(i).quantity) > 1){
+                                        quant = Integer.parseInt(shoppingCart.get(i).quantity);
+                                        break;
+                                    }
+                                }
+                                if (quant != 0){
+                                    out.println("<input type = 'text' name = 'movieQuantity' value = '" + quant + "' maxlength = '4' size = '4' style = 'text-align:center;'>");
+                                } else {
+                                    out.println("<input type = 'text' name = 'movieQuantity' value = '1' maxlength = '4' size = '4' style = 'text-align:center;'>");
+                                }
+                                out.println("<input type = 'hidden' value = '" + movie.id + "' name = 'movieId'>");
+                                for (Map.Entry<String,String> e : urlParams.entrySet()) {
+                                    out.println("<input type = 'hidden' value = '" + e.getValue() + "' name = '" + e.getKey() + "'>");
+                                }
+                                out.println("</td><td class=\"borderClass ac bgColor0\" width=\"50\"> <input type = 'submit' value = 'Add to Cart'></form> </td>");
                                 out.println("</tr>");
                             }
                         %>
@@ -192,7 +271,7 @@
                         <%
                             Class.forName("com.mysql.jdbc.Driver").newInstance();
                             Connection connection =
-                                    DriverManager.getConnection("jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false", "root", "");
+                                    DriverManager.getConnection("jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false", "root", "Apple07");
                             Statement select = connection.createStatement();
                             ResultSet result = select.executeQuery("select *  from genres; ");
 

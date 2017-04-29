@@ -14,6 +14,7 @@ public class Movie {
     public List<String> stars;
     public String bannerURL;
     public String trailerURL;
+    public String quantity;
 
 
     public Movie(String id, String year, String title, String director, String bannerURL) {
@@ -24,5 +25,20 @@ public class Movie {
         this.bannerURL = bannerURL;
         this.genres = new ArrayList<>();
         this.stars = new ArrayList<>();
+    }
+
+    public Movie(String id, String year, String title, String director, String bannerURL, String quantity) {
+        this.id = id;
+        this.year = year;
+        this.title = title;
+        this.director = director;
+        this.bannerURL = bannerURL;
+        this.genres = new ArrayList<>();
+        this.stars = new ArrayList<>();
+        this.quantity = quantity;
+    }
+
+    public void setQuantity(String quantity){
+        this.quantity = quantity;
     }
 }

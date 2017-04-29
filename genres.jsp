@@ -30,7 +30,7 @@
 <%
     Class.forName("com.mysql.jdbc.Driver").newInstance();
     Connection connection =
-            DriverManager.getConnection("jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false", "root", "");
+            DriverManager.getConnection("jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false", "root", "Apple07");
     Statement select = connection.createStatement();
     ResultSet result = select.executeQuery("select *  from genres; ");
 

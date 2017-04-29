@@ -1,8 +1,6 @@
 
 /* A servlet to check whether login information inputted by the user is correct. */
 
-import com.sun.tools.internal.jxc.ap.Const;
-
 import java.io.*;
 import java.net.*;
 import java.sql.*;

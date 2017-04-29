@@ -28,9 +28,9 @@
 <h1>Search Page</h1>
 
 <form action = "/servlet/MovieList" action = "get">
-    <input type = "text" name = "movieTitle" placeholder = "movies.Movie Title"> <br>
-    <input type = "text" name = "movieYear" placeholder = "movies.Movie Year"> <br>
-    <input type = "text" name = "movieDirector" placeholder = "movies.Movie Director"> <br>
+    <input type = "text" name = "movieTitle" placeholder = "Movie Title"> <br>
+    <input type = "text" name = "movieYear" placeholder = "Movie Year"> <br>
+    <input type = "text" name = "movieDirector" placeholder = "Movie Director"> <br>
     <input type = "text" name = "starFirstName" placeholder = "Star's First Name"> <br>
     <input type = "text" name = "starLastName" placeholder = "Star's Last Name"> <br>
     <input type = "submit" value = "Search">
