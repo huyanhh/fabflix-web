@@ -55,18 +55,10 @@
                                                                                       type="text" autocomplete="off"
                                                                                       placeholder="Search By Title..."
                                                                                       class="inputtext js-advancedSearchText">
-                                <input type="submit" value="Go" class="inputButton notActive"></div>
-                            <div id="advancedSearchResultList" class="incrementalSearchResultList"
-                                 style="left: 0px; top: 50px; width: 716px; display: none;">
-                                <div class="list list-bottom focus" style="display: none;"><a
-                                        href="/anime.php?q=&amp;type=0&amp;score=0&amp;status=0&amp;p=0&amp;r=0&amp;sm=0&amp;sd=0&amp;sy=0&amp;em=0&amp;ed=0&amp;ey=0&amp;c%5B%5D=a&amp;c%5B%5D=b&amp;c%5B%5D=c&amp;c%5B%5D=f&amp;gx=0">
-                                    View all results for <span class="fw-b"></span> <i class="fa fa-spinner fa-spin"
-                                                                                       style="display: none;"></i></a>
-                                </div>
+                                <input type="submit" value="Go" class="inputButton notActive">
                             </div>
                         </div>
                         <div id="advancedSearch" style="">
-
 
                             <div class="normal_header pt24 mt16 mb0">Filters</div>
                             <table border="0" cellpadding="0" cellspacing="5" width="100%">
