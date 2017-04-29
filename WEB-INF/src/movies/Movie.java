@@ -2,16 +2,14 @@ package movies;
 
 import java.util.ArrayList;
 import java.util.List;
-/**
- * Created by huyanh on 2017. 4. 23..
- */
+
 public class Movie {
     public String id;
     public String year;
     public String title;
     public String director;
-    public List<String> genres;
-    public List<String> stars;
+    public List<String> genres = new ArrayList<>();
+    public List<Star> stars = new ArrayList<>();
     public String bannerURL;
     public String trailerURL;
 
@@ -22,7 +20,14 @@ public class Movie {
         this.title = title;
         this.director = director;
         this.bannerURL = bannerURL;
-        this.genres = new ArrayList<>();
-        this.stars = new ArrayList<>();
+    }
+
+    public Movie(String id, String title) {
+        this.id = id;
+        this.title = title;
+    }
+
+    public Movie() {
+
     }
 }

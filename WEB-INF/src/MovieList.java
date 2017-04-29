@@ -1,6 +1,8 @@
 /* A servlet that acts as the movie list page. */
 
+import movies.Constants;
 import movies.Movie;
+import movies.Star;
 
 import java.io.*;
 import java.sql.*;
@@ -219,7 +221,6 @@ public class MovieList extends HttpServlet {
                     while (starsResultSet.next()){
                         String resultName = starsResultSet.getString("first_name") + " " + starsResultSet.getString("last_name");
 //                        out.println(resultName + "<br>");
-                        movie.stars.add(resultName);
                     }
                     starsResultSet.close();
 //                    out.println("</td>");

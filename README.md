@@ -1,7 +1,7 @@
 compile stuff:
 
 ```apple js
-javac -classpath "../../lib/servlet-api.jar:../../lib/mysql-connector-java-5.1.4.jar:Constants.java:." MovieList.java 
+javac -classpath "../lib/mysql-connector-java-5.1.4:../lib/servlet-api.jar:." MovieList.java 
 ```
 
 Styling taken from [myanimelist](https://myanimelist.net)

@@ -239,3 +239,13 @@ p {
     padding: 1rem;
     text-align: center;
 }
+
+.page-common #headerSmall {
+    position: relative;
+    background-image: url(../resources/logo_small.png);
+    background-repeat: no-repeat;
+    background-color: #FFF;
+    background-position: 0 8px;
+    height: 36px;
+    padding: 10px 0 2px
+}

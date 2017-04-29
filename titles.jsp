@@ -4,6 +4,7 @@
 %>
 <%@ page import="java.util.List" %>
 <%@ page import="movies.Movie" %>
+<%@ page import="movies.Constants" %>
 <%
 
     //Get session attributes
@@ -21,33 +22,15 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <%--<link rel="stylesheet" type="text/css" href="css/mal.css">--%>
     <link rel="stylesheet" type="text/css" href="https://myanimelist.cdn-dena.com/static/assets/css/pc/style-cfe6975aa5.css">
-    <script type="text/javascript" async=""
-            src="https://www.gstatic.com/recaptcha/api2/r20170411114922/recaptcha__en.js"></script>
-    <script async="" type="text/javascript" src="https://www.googletagservices.com/tag/js/gpt.js"></script>
-    <script type="text/javascript"
-            src="https://myanimelist.cdn-dena.com/static/assets/js/pc/header-61a5e90384.js"></script>
+    <%--<link rel="stylesheet" type="text/css" href="css/mal.css">--%>
 </head>
 
 <body onload=" " class="page-common">
 <div id="myanimelist">
-    <div class="_unit " style="width:1px;display: block !important;" data-height="1">
-        <div id="skin_detail" class="" style="width:1px;">
-            <script type="text/javascript">
-                googletag.cmd.push(function () {
-                    var slot = googletag.defineOutOfPageSlot("/84947469/skin_detail", "skin_detail").addService(googletag.pubads())
-                        .setTargeting("adult", "white").setCollapseEmptyDiv(true, true);
-                    googletag.enableServices();
-
-                    googletag.display("skin_detail");
-                });</script>
-        </div>
-    </div>
-
     <div class="wrapper">
-        <div id="headerSmall">
-            <a href="/" class="">Fabflix</a>
+        <div id="headerSmall" style="background: url(../resources/logo_small.png) center top no-repeat rgba(0, 0, 0, 0)">
+            <a href="/" class="link-mal-logo">Fabflix</a>
         </div>
         <div id="menu" class="">
             <div id="menu_left">
@@ -165,7 +148,6 @@
                             </td>
                         </tr>
                         <%
-                            //TODO krishna here
                             List<Movie> movies = (List<Movie>) request.getAttribute("movies");
                             for (Movie movie : movies ) {
                                 out.println("<tr>");
@@ -173,7 +155,7 @@
                                 out.println("<img width=\"50\" height=\"70\" border=\"0\" src=\"" + movie.bannerURL + "\">");
                                 out.println("</td>");
                                 out.println("<td class=\"borderClass bgColor0\" valign=\"top\">" +
-                                        "<a href=//TODO>" +
+                                        "<a href=../movie.jsp?id=" + movie.id + ">" +
                                         "<strong>" +
                                         movie.title + "</strong>" +
                                         "</a>");
@@ -192,7 +174,7 @@
                         <%
                             Class.forName("com.mysql.jdbc.Driver").newInstance();
                             Connection connection =
-                                    DriverManager.getConnection("jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false", "root", "");
+                                    DriverManager.getConnection("jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false", Constants.USER, Constants.PASSWORD);
                             Statement select = connection.createStatement();
                             ResultSet result = select.executeQuery("select *  from genres; ");
 
