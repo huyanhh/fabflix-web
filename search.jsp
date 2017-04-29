@@ -30,6 +30,7 @@
 
 <div id="myanimelist">
 
+<<<<<<< HEAD
     <div class="wrapper">
         <div id="headerSmall"><a href="/panel.php" class="link-mal-logo">Fabflix</a></div>
         <div id="menu" class="">

@@ -30,18 +30,6 @@
 
 <body onload=" " class="page-common">
 <div id="myanimelist">
-    <div class="_unit " style="width:1px;display: block !important;" data-height="1">
-        <div id="skin_detail" class="" style="width:1px;">
-            <script type="text/javascript">
-                googletag.cmd.push(function () {
-                    var slot = googletag.defineOutOfPageSlot("/84947469/skin_detail", "skin_detail").addService(googletag.pubads())
-                        .setTargeting("adult", "white").setCollapseEmptyDiv(true, true);
-                    googletag.enableServices();
-
-                    googletag.display("skin_detail");
-                });</script>
-        </div>
-    </div>
 
     <div class="wrapper">
         <div id="headerSmall">
@@ -70,8 +58,7 @@
                     <div class="genre-link">
                         <%
                             Class.forName("com.mysql.jdbc.Driver").newInstance();
-                            Connection connection =
-                                    DriverManager.getConnection("jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false", Constants.USER, Constants.PASSWORD);
+                            Connection connection = DriverManager.getConnection("jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false", Constants.USER, Constants.PASSWORD);
                             Statement select = connection.createStatement();
                             ResultSet result = select.executeQuery("select *  from genres; ");
                             int col = 0;
