@@ -32,7 +32,7 @@
 <div id="myanimelist">
 
     <div class="wrapper">
-        <div id="headerSmall">
+        <div id="headerSmall" style="background-image: url(resources/logo_small.png)">
             <a href="/" class="">Fabflix</a>
         </div>
         <div id="menu" class="">
