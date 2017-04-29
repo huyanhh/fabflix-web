@@ -31,7 +31,7 @@
 <div id="myanimelist">
 
     <div class="wrapper">
-        <div id="headerSmall" style="background-image: url(resources/logo_small.png)"><a href="/panel.php" class="link-mal-logo">Fabflix</a></div>
+        <div id="headerSmall" style="background-image: url(resources/logo_small.png)"><a href="/browse.jsp" class="link-mal-logo">Fabflix</a></div>
         <div id="menu" class="">
             <div id="menu_left">
                 <ul id="nav">

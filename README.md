@@ -12,3 +12,5 @@ Styling taken from [myanimelist](https://myanimelist.net)
 - replaced images with images from database
 - moved the search function to a different page
 - removed breadcrumbs
+- removed all headers and replaced with search and browse
+- replaced logo

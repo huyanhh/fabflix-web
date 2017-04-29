@@ -33,7 +33,7 @@
 
     <div class="wrapper">
         <div id="headerSmall" style="background-image: url(resources/logo_small.png)">
-            <a href="/" class="">Fabflix</a>
+            <a href="/browse.jsp" class="">Fabflix</a>
         </div>
         <div id="menu" class="">
             <div id="menu_left">

@@ -124,14 +124,17 @@
                         <tbody>
                         <tr>
                             <td class="borderClass bgColor1" valign="top" width="50"></td>
-                            <td class="borderClass bgColor1 ac fw-b" valign="top">Title</td>
-                            <%--<td class="borderClass bgColor1 ac fw-b" width="45" nowrap="">--%>
-                                <%--<a href="?letter=A&amp;sy=0&amp;sm=0&amp;sd=0&amp;ey=0&amp;em=0&amp;ed=0&amp;o=6&amp;w=1"><i--%>
-                                    <%--class="fa fa-sort ml2"></i></a></td>--%>
+                            <td class="borderClass bgColor1 ac fw-b" valign="top">Title
+                                <br>
+                                <%
+                                    out.println("<a href='./MovieList?method=AscYear" + "'>Asc&uarr;</a>&nbsp;<a href='./MovieList?method=DescYear" + "'>Desc&darr;</a></td>");
+                                %>
+                            </td>
                             <%--<td class="borderClass bgColor1 ac fw-b" width="40" nowrap="">--%>
                                 <%--<a href="?letter=A&amp;sy=0&amp;sm=0&amp;sd=0&amp;ey=0&amp;em=0&amp;ed=0&amp;o=4&amp;w=1"><i--%>
                                     <%--class="fa fa-sort ml2"></i></a></td>--%>
-                            <td class="borderClass bgColor1 ac fw-b" width="135" nowrap="">
+                            <td class="borderClass bgColor1 ac fw-b" width="45" nowrap="">
+                                Year
                                 <%
                                     String options = "";
                                     String genreInstance = request.getParameter("movieGenre");
@@ -147,10 +150,12 @@
                                         options += "&director=" + directorInstance;
                                     }
 
-                                out.println("<a href='./MovieList?method=AscYear" + options + "'>Asc </a> &nbsp <a href='./MovieList?method=DescYear" + options + "'> Desc</a></td>");
+                                out.println("<a href='./MovieList?method=AscYear" + options + "'>Asc&uarr;</a>&nbsp;<a href='./MovieList?method=DescYear" + options + "'>Desc&darr;</a></td>");
                                 %>
-                                <a href="">Year<i
-                                    class="fa fa-sort ml2"></i></a></td>
+
+                            </td>
+                            <td class="borderClass bgColor1 ac fw-b" width="40">Quantity</td>
+
                         </tr>
                         <tr>
                             <td class="borderClass bgColor0" valign="top" width="50">

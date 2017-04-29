@@ -85,20 +85,8 @@
 <body onload=" " class="page-common" data-pin-hover="true">
 <div id="myanimelist">
 
-
-    <script type="text/javascript">
-        window.MAL.SkinAd.prepareForSkin('skin_detail');
-    </script>
-
-    <div id="ad-skin-bg-left" class="ad-skin-side-outer ad-skin-side-bg bg-left">
-        <div id="ad-skin-left" class="ad-skin-side left" style="display: none;">
-            <div id="ad-skin-left-absolute-block">
-                <div id="ad-skin-left-fixed-block"></div>
-            </div>
-        </div>
-    </div>
     <div class="wrapper">
-        <div id="headerSmall"><a href="/panel.php" class="link-mal-logo">MyAnimeList.net</a>
+        <div id="headerSmall" style="background-image: url(resources/logo_small.png)"><a href="/browse.jsp" class="link-mal-logo">MyAnimeList.net</a>
             <div id="header-menu" class="pulldown"></div>
         </div>
         <div id="menu" class="">
@@ -150,92 +138,11 @@
                                 <table border="0" cellspacing="0" cellpadding="0" width="100%">
                                     <tbody>
                                     <tr>
-                                        <td valign="top">
-                                            <div class="pb16">
-                                                <div class="di-t w100 mt12">
-                                                    <div class="anime-detail-header-video di-tc va-t pl16" style="width:200px;">
-                                                    </div>
-                                                </div>
-                                                <div class="js-myinfo-error badresult-text al pb4"
-                                                     style="display:none;"></div>
-                                            </div>
-                                            <h2>
-                                                <div class="floatRightHeader"><a
-                                                        href="/dbchanges.php?aid=25777&amp;t=synopsis"
-                                                        style="font-weight: normal;">Edit</a></div>
-                                                Synopsis
-                                            </h2>
-                                            <span itemprop="description">Second season of <i>Shingeki no Kyojin</i>.</span>
-                                            <h2 style="margin-top: 15px;">
-                                                <div class="floatRightHeader"><a
-                                                        href="/dbchanges.php?aid=25777&amp;t=background"
-                                                        style="font-weight: normal;">Edit</a></div>
-                                                Background
-                                            </h2>
-                                            No background information has been added to this title. Help improve our
-                                            database by adding background information <a
-                                                href="/dbchanges.php?aid=25777&amp;t=background">here</a>.<br>
-                                            <h2 style="margin-top: 15px;">
-                                                <div class="floatRightHeader"><a
-                                                        href="/anime/25777/Shingeki_no_Kyojin_Season_2/video">More
-                                                    Videos</a></div>
-                                                Episode Videos
-                                            </h2>
-                                            <div class="anime-slide-block" id="episode_video"
-                                                 data-json="{&quot;width&quot;:800,&quot;btnWidth&quot;:40,&quot;margin&quot;:8}"
-                                                 style="height: 129px; width: 800px;">
-                                                <div class="btn-anime-slide-side left"
-                                                     style="display: none; left: -40px; opacity: 0;"><span
-                                                        class="btn-inner"></span></div>
-                                                <div class="btn-anime-slide-side right"
-                                                     style="display: none; right: -40px; opacity: 0;"><span
-                                                        class="btn-inner"></span></div>
-                                                <div class="anime-slide-outer" style="width: 800px;">
-                                                    <ul class="anime-slide js-anime-slide" data-slide="4"
-                                                        style="width: 1616px;">
-                                                        <li class="btn-anime" style="width:194px;"><a
-                                                                href="https://myanimelist.net/anime/25777/Shingeki_no_Kyojin_Season_2/episode/4"
-                                                                class="link"
-                                                                style="background-image:url('http://img1.ak.crunchyroll.com/i/spire3-tmb/f8d8aaa0b6ea95fed54df3fec580093e1492833825_large.jpg');width:194px;height:129px;"><span
-                                                                class="title pb8" style="width:184px;">
-            Episode 4<span class="icon-pay ml4"></span></span></a></li>
-                                                        <li class="btn-anime" style="width:194px;"><a
-                                                                href="https://myanimelist.net/anime/25777/Shingeki_no_Kyojin_Season_2/episode/3"
-                                                                class="link"
-                                                                style="background-image:url('http://img1.ak.crunchyroll.com/i/spire4-tmb/86d0daa9fb45aecdaabac03d2c544d011492213811_large.jpg');width:194px;height:129px;"><span
-                                                                class="title pb8" style="width:184px;">
-            Episode 3<span class=" ml4"></span></span></a></li>
-                                                        <li class="btn-anime" style="width:194px;"><a
-                                                                href="https://myanimelist.net/anime/25777/Shingeki_no_Kyojin_Season_2/episode/2"
-                                                                class="link"
-                                                                style="background-image:url('http://img1.ak.crunchyroll.com/i/spire3-tmb/d1171eef18af9f480b54bb7384c5aa851491617802_large.jpg');width:194px;height:129px;"><span
-                                                                class="title pb8" style="width:184px;">
-            Episode 2<span class=" ml4"></span></span></a></li>
-                                                        <li class="btn-anime" style="width:194px;"><a
-                                                                href="https://myanimelist.net/anime/25777/Shingeki_no_Kyojin_Season_2/episode/1"
-                                                                class="link"
-                                                                style="background-image:url('http://img1.ak.crunchyroll.com/i/spire3-tmb/e722d61c2b44397d4c0983c975f790921491006928_large.jpg');width:194px;height:129px;"><span
-                                                                class="title pb8" style="width:184px;">
-            Episode 1<span class=" ml4"></span></span></a></li>
-                                                    </ul>
-                                                </div>
-                                            </div>
-                                            <div class="border_top"
-                                                 style="padding:16px 0px 0px 0px;margin:14px 0px 0px 0px;"></div>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td class="pb24"><br><br>
+                                        <td class="pb24">
                                             <h2>
                                                 <div class="floatRightHeader"></div>
-                                                Characters &amp; Voice Actors
+                                                Movie Roles
                                             </h2>
-                                            <table border="0" cellpadding="0" cellspacing="0" width="100%"><tbody><tr><td valign="top" width="27" class="borderClass bgColor2" align="center"><div class="picSurround">
-                                                <a href="/character/40881/Mikasa_Ackerman" style="font-weight: normal;">
-                                                    <img src="https://myanimelist.cdn-dena.com/r/46x64/images/characters/9/215563.webp?s=a12e4bc7a7cf9b18f23b8d9d589a2268" width="23" height="32" alt="Ackerman, Mikasa" vspace="4" hspace="8" border="0">
-                                                </a></div></td><td valign="top" class="borderClass bgColor2">
-                                                <a href="/character/40881/Mikasa_Ackerman">Ackerman, Mikasa</a>
-                                            </td></tr></tbody></table>
                                             <%
                                                 for (Movie movie: star.movies) {
                                                     out.println("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tbody><tr><td valign=\"top\" width=\"27\" class=\"borderClass bgColor2\" align=\"center\"><div class=\"picSurround\">");
