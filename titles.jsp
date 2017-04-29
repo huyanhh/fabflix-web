@@ -108,19 +108,7 @@
             <div><h1 class="h1">Browse Movies</h1></div>
             <div id="content">
 
-                <div id="horiznav_nav" class="ac mt8 ml0 mr0">
-                </div>
-
-                <script language="javascript" type="text/javascript">
-                    function search_animeSearchLoad() {
-                        var titleObj = document.getElementById("q");
-                        titleObj.focus();
-                    }
-
-                    function search_showAdvanced() {
-                        $("#advancedSearch").toggle();
-                    }
-                </script>
+                <div id="horiznav_nav" class="ac mt8 ml0 mr0"></div>
 
                 <div class="normal_header clearfix pt16">
                     <div class="fl-r di-ib fs11 fw-n">

@@ -79,6 +79,8 @@
             String resultName = starsResultSet.getString("full_name");
             String resultSID = starsResultSet.getString("id");
             String resultPhotoURL = starsResultSet.getString("photo_url");
+            if (resultName.startsWith("none"))
+                resultName = resultName.split(" ")[1];
             movie.stars.add(new Star(resultSID, resultName, resultPhotoURL));
         }
         starsResultSet.close();
@@ -145,7 +147,7 @@
                                 <div class="spaceit">
                                     <span class="dark_text">Genres:</span>
                                     <% for (String genre : movie.genres)
-                                        out.println("<a>" + genre + ",</a>");
+                                        out.println("<a href=servlet/MovieList?movieGenre=" + genre + ">" + genre + ",</a>");
                                     %>
                                 </div>
                             </div>
@@ -193,12 +195,6 @@
                                                 <div class="floatRightHeader"></div>
                                                 Characters &amp; Voice Actors
                                             </h2>
-                                            <table border="0" cellpadding="0" cellspacing="0" width="100%"><tbody><tr><td valign="top" width="27" class="borderClass bgColor2" align="center"><div class="picSurround">
-                                                                <a href="/character/40881/Mikasa_Ackerman" style="font-weight: normal;">
-                                                                    <img src="https://myanimelist.cdn-dena.com/r/46x64/images/characters/9/215563.webp?s=a12e4bc7a7cf9b18f23b8d9d589a2268" width="23" height="32" alt="Ackerman, Mikasa" vspace="4" hspace="8" border="0">
-                                                                </a></div></td><td valign="top" class="borderClass bgColor2">
-                                                            <a href="/character/40881/Mikasa_Ackerman">Ackerman, Mikasa</a>
-                                                        </td></tr></tbody></table>
                                             <%
                                                 for (Star actor : movie.stars) {
                                                     out.println("<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tbody><tr><td valign=\"top\" width=\"27\" class=\"borderClass bgColor2\" align=\"center\"><div class=\"picSurround\">");
