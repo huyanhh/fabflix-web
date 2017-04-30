@@ -24,6 +24,10 @@
     ArrayList<Movie> shoppingCart = new ArrayList<Movie>();
     if (session.getAttribute("shoppingCart") != null){
         shoppingCart = (ArrayList<Movie>)session.getAttribute("shoppingCart");
+        //Delete all items from the shopping cart
+        for (int i = 0; i < shoppingCart.size(); i++){
+            shoppingCart.remove(i--);
+        }
     }
 
 %>
@@ -40,28 +44,11 @@
 
 <div style = "margin-top:100px;">
     <div style = "margin:0px auto; width:500px;">
-        <h2> Customer Information </h2>
-        <div style = "margin:0px auto; width:330px; border:1px solid #cfcfcf; border-radius:5px; padding:15px 15px 15px 15px;">
-            <form action = "/servlet/Checkout" method="post">
-                <div class = "form-group">
-                    <input type = "text" name = "creditCardNumber" class = "form-control" placeholder="Credit Card Number">
-                </div>
-                <div class = "form-group">
-                    <input type = "text" name = "expirationDate" class = "form-control" placeholder="Expiration Date">
-                </div>
-                <div class = "form-group">
-                    <input type = "text" name = "firstNameOnCard" class = "form-control" placeholder="First Name on Card">
-                </div>
-                <div class = "form-group">
-                    <input type = "text" name = "lastNameOnCard" class = "form-control" placeholder="Last Name on Card">
-                </div>
-                <div style = "text-align:right;">
-                    <input type = "submit" value = "Checkout" class = "btn btn-primary">
-                </div>
-            </form>
-        </div>
-        <div style = "text-align:center; margin-top:15px; font-size:140%;">
-            <a href = "shoppingCart.jsp"> Back </a>
+        <h2> Customer Confirmation </h2>
+        <div style = "margin:0px auto; width:350px; border:1px solid #cfcfcf; border-radius:5px; text-align:left; padding:15px;">
+            <p style="font-size:160%;">
+                Your order has been successfully completed! Click <a href = "main.jsp"> here </a> to return to the main page.
+            </p>
         </div>
     </div>
 </div>
