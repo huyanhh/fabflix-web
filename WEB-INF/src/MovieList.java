@@ -72,8 +72,8 @@ public class MovieList extends HttpServlet {
             String movieYear = request.getParameter("movieYear");
             String movieGenre = request.getParameter("movieGenre");
             String movieDirector = request.getParameter("movieDirector");
-            String movieId = request.getParameter("movieId");
-            String movieQuantity = request.getParameter("movieQuantity");
+            //String movieId = request.getParameter("movieId");
+            //String movieQuantity = request.getParameter("movieQuantity");
             String starFirstName = request.getParameter("starFirstName");
             String starLastName = request.getParameter("starLastName");
 
@@ -82,75 +82,6 @@ public class MovieList extends HttpServlet {
                 out.println("<script> alert('No movie results were found!') </script>");
                 out.println("<script> window.location.replace('../search.jsp'); </script>");
             } else {
-
-                //Add items to shopping cart if movieId and movieQuantity are both not null (they are in the url as parameters)
-                if (movieId != null && movieQuantity != null) {
-                    //Create a shopping cart if it does not exist already
-                    if (session.getAttribute("shoppingCart") == null) {
-                        session.setAttribute("shoppingCart", new ArrayList<Movie>());
-                    }
-                    //Iterate through the session's shoppingCart
-                    boolean movieFound = false; //denotes whether or not movie exists in shopping cart
-                    ArrayList<Movie> shoppingCart = (ArrayList<Movie>) session.getAttribute("shoppingCart"); //due to casting, suppresswarnings("unchecked") is needed
-                    for (int i = 0; i < shoppingCart.size(); i++) {
-                        //Look for the movie using movieId
-                        if (shoppingCart.get(i).id.equals(movieId)) {
-                            //Update movieFound to true
-                            movieFound = true;
-                            //Set the quantity.
-                            shoppingCart.get(i).setQuantity(movieQuantity);
-                            //If quantity is 0, then remove it from the shopping cart
-                            if (movieQuantity.equals("0")) {
-                                shoppingCart.remove(i);
-                            }
-                            break;
-                        }
-                    }
-                    //If movie not found in shopping cart and quantity is > 0, then add it to the shopping cart
-                    if (movieFound == false && Integer.parseInt(movieQuantity) > 0) {
-                        //Create a movie object
-                        Statement movieStatement = dbcon.createStatement();
-                        String movieSQL = "select * from movies where id='" + movieId + "';";
-                        ResultSet movieRS = movieStatement.executeQuery(movieSQL);
-                        movieRS.next();
-                        String scYear = movieRS.getString("year");
-                        String scTitle = movieRS.getString("title");
-                        String scDirector = movieRS.getString("director");
-                        String scBanner = movieRS.getString("banner_url");
-                        Movie scMovie = new Movie(movieId, scYear, scTitle, scDirector, scBanner, movieQuantity);
-
-                        //Get the stars and genres
-                        PreparedStatement scGenreStatement, scStarsStatement;
-                        String scGenreQuery = "select name from genres where id in (select genre_id from genres_in_movies where movie_id = ?);";
-                        String scStarsQuery = "select first_name, last_name from stars where id in (select star_id from stars_in_movies where movie_id = ?);";
-                        scGenreStatement = dbcon.prepareStatement(scGenreQuery);
-                        scStarsStatement = dbcon.prepareStatement(scStarsQuery);
-
-                        scGenreStatement.setString(1, movieId);
-                        ResultSet scGenreResultSet = scGenreStatement.executeQuery();
-                        while (scGenreResultSet.next()) {
-                            String scResultGenre = scGenreResultSet.getString("name");
-                            scMovie.genres.add(scResultGenre);
-                        }
-
-                        scGenreResultSet.close();
-
-                        scStarsStatement.setString(1, movieId);
-                        ResultSet scStarsResultSet = scStarsStatement.executeQuery();
-                        while (scStarsResultSet.next()) {
-                            Star star = new Star();
-                            star.name = scStarsResultSet.getString("first_name") + " " + scStarsResultSet.getString("last_name");
-                            scMovie.stars.add(star);
-                        }
-                        scStarsResultSet.close();
-
-                        //Add the movie to the shopping cart
-                        shoppingCart.add(scMovie);
-
-                        movieStatement.close();
-                    }
-
-                }
 
                 //If GET variables are null, assign them to empty strings "". Otherwise, store as session attribute.
                 if (movieTitle == null) {

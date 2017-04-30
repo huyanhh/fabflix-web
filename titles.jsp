@@ -217,7 +217,7 @@
 
                                 out.println("<td class=\"borderClass ac bgColor0\" width=\"45\">" + movie.year + "</td>");
                                 out.println("<td class=\"borderClass ac bgColor0\" width=\"40\">");
-                                out.println("<form action = '/servlet/MovieList' method = 'get'>");
+                                out.println("<form action = '/servlet/ShoppingCart' method = 'get'>");
 
                                 int quant = 0;
                                 for (int i = 0; i < shoppingCart.size(); i++){
@@ -235,6 +235,7 @@
                                 for (Map.Entry<String,String> e : urlParams.entrySet()) {
                                     out.println("<input type = 'hidden' value = '" + e.getValue() + "' name = '" + e.getKey() + "'>");
                                 }
+                                out.println("<input type = 'hidden' value = 'true' name = 'movieList'>");
                                 out.println("</td><td class=\"borderClass ac bgColor0\" width=\"50\"> <input type = 'submit' value = 'Add to Cart'></form> </td>");
                                 out.println("</tr>");
                             }
