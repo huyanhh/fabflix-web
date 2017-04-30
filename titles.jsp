@@ -170,7 +170,7 @@
                                 out.println("</td>");
                                 out.println("<td class=\"borderClass bgColor0\" valign=\"top\">" +
                                         "<a href=../movie.jsp?id=" + movie.id + ">" +
-                                        "<strong>" + movie.title + "</strong>" +
+                                        "<strong>" + movie.title + " (" + movie.id + ")" + "</strong>" +
                                         "</a>" + "</td>");
 
                                 out.println("<td class=\"borderClass ac bgColor0\" width=\"45\">" + movie.year + "</td>");
