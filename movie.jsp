@@ -206,7 +206,7 @@
                                                                     style = "background-image:url('https://i1.ytimg.com/vi/" + ytID +"/mqdefault.jpg')";
                                                                 }
                                                             %>
-                                                            <a class="iframe js-fancybox-video video-unit promotion" href="https://www.youtube.com/embed/zLaVP8IhIuc?enablejsapi=1&amp;wmode=opaque&amp;autoplay=1" style="<% out.println(style); %>" rel="gallery">
+                                                            <a class="iframe js-fancybox-video video-unit promotion" href=<% out.println("\"" + url + "\""); %> style="<% out.println(style); %>" rel="gallery">
                                                             <div class="info-container">
                                                                 <span class="title pl4 pr4">Trailer</span></div>
                                                             <span class="btn-play" style="background-color: rgba(255, 255, 255, 0);">play</span></a>
