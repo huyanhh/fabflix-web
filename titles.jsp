@@ -174,12 +174,15 @@
                                         "</a>" + "</td>");
 
                                 out.println("<td class=\"borderClass ac bgColor0\" width=\"45\">" + movie.year + "</td>");
-                                out.println("<td class=\"borderClass ac bgColor0\" width=\"45\">" + movie.director + "</td>");
-                                out.println("<td class=\"borderClass ac bgColor0\" width=\"45\">");
+                                out.println("<td class=\"borderClass ac bgColor0\" width=\"100\">" + movie.director + "</td>");
+                                out.println("<td class=\"borderClass ac bgColor0\" width=\"100\">");
                                 for (Star star : movie.stars)
-                                    out.println("<a href=\"../star.jsp?=" + star.id + "\">" + star.name + "</a>");
+                                    out.println("<a href=\"../star.jsp?id=" + star.id + "\">" + star.name + "</a><br>");
                                 out.println("</td>");
-                                out.println("<td class=\"borderClass ac bgColor0\" width=\"45\">" + movie.genres + "</td>");
+                                out.println("<td class=\"borderClass ac bgColor0\" width=\"70\">");
+                                for (String genre : movie.genres)
+                                    out.println(genre + "<br>");
+                                out.println("</td>");
 
                                 out.println("<td class=\"borderClass ac bgColor0\" width=\"40\">");
                                 out.println("<form action = '/servlet/ShoppingCart' method = 'get'>");
