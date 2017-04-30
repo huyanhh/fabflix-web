@@ -3,9 +3,12 @@
                 java.io.IOException"
 %>
 <%@ page import="java.util.List" %>
+<%@ page import="java.util.ArrayList" %>
 <%@ page import="movies.Movie" %>
 <%@ page import="movies.Constants" %>
 <%@ page import="movies.Star" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="java.util.HashMap" %>
 <%
 
     //Get session attributes
@@ -91,6 +94,48 @@
     genreStatement.close();
     starsStatement.close();
 %>
+<%// Shopping Cart
+    //Get total movie quantity in shopping cart
+    int totalQuantity = 0;
+    ArrayList<Movie> shoppingCart = new ArrayList<>();
+    if (session.getAttribute("shoppingCart") != null){
+        shoppingCart = (ArrayList<Movie>)session.getAttribute("shoppingCart");
+        for (int i = 0; i < shoppingCart.size(); i++){
+            totalQuantity += Integer.parseInt(shoppingCart.get(i).quantity);
+        }
+    }
+
+    //Get URL parameters
+    String urlMovieTitle = (String)session.getAttribute("urlMovieTitle");
+    String urlMovieYear = (String)session.getAttribute("urlMovieYear");
+    String urlMovieGenre = (String)session.getAttribute("urlMovieGenre");
+    String urlMovieDirector = (String)session.getAttribute("urlMovieDirector");
+    String urlStarFirstName = (String)session.getAttribute("urlStarFirstName");
+    String urlStarLastName = (String)session.getAttribute("urlStarLastName");
+
+    //Create a list of URL parameters
+    HashMap<String,String> urlParams = new HashMap<String,String>();
+
+    //Add url parameters if they are not null
+    if (urlMovieTitle != null){
+        urlParams.put("movieTitle",urlMovieTitle);
+    }
+    if (urlMovieYear != null){
+        urlParams.put("movieYear",urlMovieYear);
+    }
+    if (urlMovieGenre != null){
+        urlParams.put("movieGenre",urlMovieGenre);
+    }
+    if (urlMovieDirector != null){
+        urlParams.put("movieDirector",urlMovieDirector);
+    }
+    if (urlStarFirstName != null){
+        urlParams.put("starFirstName",urlStarFirstName);
+    }
+    if (urlStarLastName != null){
+        urlParams.put("starLastName",urlStarLastName);
+    }
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -114,11 +159,26 @@
                     <li class="small">
                         <a href="browse.jsp" class="non-link">Browse</a>
                     </li>
+                    <%
+                        if (totalQuantity < 10){
+                            out.println("<li class=\"large\" style = 'width:160px;'>");
+                        } else if (totalQuantity < 100){
+                            out.println("<li class=\"large\" style = 'width:170px;'>");
+                        } else if (totalQuantity < 1000){
+                            out.println("<li class=\"large\" style = 'width:180px;'>");
+                        } else if (totalQuantity < 10000){
+                            out.println("<li class=\"large\" style = 'width:190px;'>");
+                        } else {
+                            out.println("<li class=\"large\" style = 'width:200px;'>");
+                        }
+                    %>
+                    <a href="../shoppingCart.jsp" class="non-link">Checkout (<% out.println(totalQuantity); %> items) </a>
+                    </li>
                 </ul>
             </div>
         </div>
         <div id="contentWrapper" itemscope="" itemtype="http://schema.org/Product">
-            <div><h1 class="h1"><span itemprop="name"><% out.println(movie.title); %></span></h1></div>
+            <div><h1 class="h1"><span itemprop="name"><% out.println(movie.title + " (" + movie.id + ")"); %></span></h1></div>
             <div id="content">
 
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -131,6 +191,48 @@
                                         <img width="225" height="321" src="<% out.println(movie.bannerURL); %>" alt="Shingeki no Kyojin Season 2" class="ac" itemprop="image">
                                     </a>
                                 </div>
+                                <div style="border-bottom: thin solid" class="profileRows pb0">
+                                    <span style="font-weight: bold">Add to Cart</span>
+                                </div>
+
+                                <div id="addtolist" class="addtolist-block js-anime-addtolist-block">
+
+                                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                                        <tbody>
+                                        <% out.println("<form action='/servlet/MovieList' method = 'get'>"); %>
+                                        <tr>
+                                            <td class="spaceit">Amount</td>
+                                            <td class="spaceit">
+
+                                                <%
+                                                    int quant = 1;
+                                                    for (int i = 0; i < shoppingCart.size(); i++){
+                                                        if (shoppingCart.get(i).id.equals(movie.id) && Integer.parseInt(shoppingCart.get(i).quantity) > 1){
+                                                            quant = Integer.parseInt(shoppingCart.get(i).quantity);
+                                                            break;
+                                                        }
+                                                    }
+
+                                                    out.println("<input type = 'hidden' value = '" + movie.id + "' name = 'movieId'>");
+                                                    for (Map.Entry<String,String> e : urlParams.entrySet()) {
+                                                        out.println("<input type = 'hidden' value = '" + e.getValue() + "' name = '" + e.getKey() + "'>");
+                                                    }
+                                                %>
+                                                <input type="text" id="myinfo_watchedeps" name="myinfo_watchedeps" size="3" class="inputtext" value="<% out.println(quant); %>">
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>&nbsp;</td>
+                                            <td>
+                                                <input type="submit" name="myinfo_submit" value="Add" class="inputButton btn-middle flat js-anime-add-button">
+                                            </td>
+                                        </tr>
+                                        <% out.println("</form>"); %>
+                                        </tbody></table>
+                                    <div id="myinfoDisplay" style="padding-left: 89px; margin-top: 3px;"></div>
+                                </div>
+
                                 <h2>Information</h2>
                                 <div>
                                     <span class="dark_text">Title:</span>
