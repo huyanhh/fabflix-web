@@ -36,6 +36,15 @@ public class MovieList extends HttpServlet {
         session.removeAttribute("urlMovieDirector");
         session.removeAttribute("urlStarFirstName");
         session.removeAttribute("urlStarLastName");
+        session.removeAttribute("method");
+        session.removeAttribute("page");
+
+        // Gets the page number you are currently on
+        String page = request.getParameter("page");
+        //Sends the page number back to the frontend to perform pagination results filtering
+        request.setAttribute("page", page == null ? 1 : Integer.parseInt(page));
+
+        session.setAttribute("page",page);
 
         //Get session attributes
         String customerId = (String)session.getAttribute("customerId");
@@ -126,16 +135,19 @@ public class MovieList extends HttpServlet {
                 //Based on provided information, generate a query that can be executed to display movie results
                 String strToFormat = "", query = "";
                 String method = request.getParameter("method");
+                request.setAttribute("method",method);
 
-                //If the movieGenre has a length > 1, then it was passed as a parameter so perform a different query
+                session.setAttribute("method",method);
 
-                if (movieGenre.length() > 1 && (method == null || method.isEmpty())) {
+                //If the movieGenre has a length > 1 and no sort method apply do the standard genre search query
+                if (movieGenre.length() > 1 && (method == null || method.isEmpty())){
                     strToFormat = "select * from movies where id in (select movie_id from genres_in_movies where genre_id in (select id from genres where name like '%s'));";
-                    query = String.format(strToFormat, movieGenre);
-                } else if (movieGenre.length() > 1 && (method != null || !method.isEmpty())) {
+                    query = String.format(strToFormat,movieGenre);
+                } else if (movieGenre.length() > 1 && (method != null || !method.isEmpty())){
+                    //changes the query for genre based on type of sort method applied
                     switch (method) {
                         case "AscTitle":
-                            strToFormat = strToFormat + "order by title asc";
+                            strToFormat = "select * from movies where id in (select movie_id from genres_in_movies where genre_id in (select id from genres where name like '%s')) order by title;";
                             query = String.format(strToFormat, movieGenre);
                             break;
                         case "DescTitle":
@@ -152,26 +164,26 @@ public class MovieList extends HttpServlet {
                             break;
                     }
                 } else { //otherwise perform same query for search and browse by title
-                    strToFormat = "select * from movies where title like '%s' and year like '%s' and director like '%s' and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like '%s' and last_name like '%s'));";
-                    if (method == null || method.isEmpty()) {
+                    if (method == null || method.isEmpty()){
                         strToFormat = "select * from movies where title like '%s' and year like '%s' and director like '%s' and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like '%s' and last_name like '%s'));";
                         query = String.format(strToFormat, movieTitle, movieYear, movieDirector, starFirstName, starLastName);
                     } else {
+                        //changes the search and browse by title query based on type of sort method applied
                         switch (method) {
                             case "AscTitle":
-                                strToFormat = strToFormat + "order by title asc";
-                                query = String.format(strToFormat, movieTitle, movieYear, movieDirector, starFirstName, starLastName);
-                                break;
-                            case "DescTitle":
-                                strToFormat = strToFormat + "order by title desc";
-                                query = String.format(strToFormat, movieTitle, movieYear, movieDirector, starFirstName, starLastName);
-                                break;
-                            case "AscYear":
                                 strToFormat = "select * from movies where title like '%s' and year like '%s' and director like '%s' and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like '%s' and last_name like '%s')) order by title;";
                                 query = String.format(strToFormat, movieTitle, movieYear, movieDirector, starFirstName, starLastName);
                                 break;
+                            case "DescTitle":
+                                strToFormat = "select * from movies where title like '%s' and year like '%s' and director like '%s' and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like '%s' and last_name like '%s')) order by title desc;";
+                                query = String.format(strToFormat, movieTitle, movieYear, movieDirector, starFirstName, starLastName);
+                                break;
+                            case "AscYear":
+                                strToFormat = "select * from movies where title like '%s' and year like '%s' and director like '%s' and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like '%s' and last_name like '%s')) order by year asc;";
+                                query = String.format(strToFormat, movieTitle, movieYear, movieDirector, starFirstName, starLastName);
+                                break;
                             case "DescYear":
-                                strToFormat = strToFormat + "order by year desc";
+                                strToFormat = "select * from movies where title like '%s' and year like '%s' and director like '%s' and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like '%s' and last_name like '%s')) order by year desc;";
                                 query = String.format(strToFormat, movieTitle, movieYear, movieDirector, starFirstName, starLastName);
                                 break;
                         }

@@ -65,6 +65,8 @@ public class ShoppingCart extends HttpServlet {
             String movieDirector = request.getParameter("movieDirector");
             String starFirstName = request.getParameter("starFirstName");
             String starLastName = request.getParameter("starLastName");
+            String method = request.getParameter("method");
+            String page = request.getParameter("page");
 
             //Add items to shopping cart if movieId and movieQuantity are both not null (they are in the url as parameters)
             if (movieId != null && movieQuantity != null) {
@@ -134,11 +136,10 @@ public class ShoppingCart extends HttpServlet {
                 }
             }
 
-            //Redirect to movie.jsp if movie is not null and is true.
-            if (movie != null && movie.equals("true")){
+
+            if (movie != null && movie.equals("true")){ //Redirect to movie.jsp if movie is not null and is true.
                 out.println("<script>window.location.replace('../movie.jsp?id="+ movieId +"');</script>");
-            }
-            else if (movieList != null && movieList.equals("true")){ //if movieList is true, redirect to movie list page and display same movies
+            } else if (movieList != null && movieList.equals("true")){ //if movieList is true, redirect to movie list page and display same movies
                 //Create a list of URL parameters
                 HashMap<String,String> urlParams = new HashMap<String,String>();
 
@@ -161,11 +162,17 @@ public class ShoppingCart extends HttpServlet {
                 if (starLastName != null){
                     urlParams.put("starLastName",starLastName);
                 }
+                if (method != null){
+                    urlParams.put("method",method);
+                }
+                if (page != null){
+                    urlParams.put("page",page);
+                }
                 String url = "../servlet/MovieList?";
                 int count = 0;
                 for (Map.Entry<String,String> e : urlParams.entrySet()){
                     url += e.getKey() + "=" + e.getValue();
-                    if (count < urlParams.size()){
+                    if (count < urlParams.size()-1){
                         url += "&";
                     }
                     count++;

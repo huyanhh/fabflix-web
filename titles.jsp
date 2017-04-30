@@ -38,6 +38,8 @@
     String urlMovieDirector = (String)session.getAttribute("urlMovieDirector");
     String urlStarFirstName = (String)session.getAttribute("urlStarFirstName");
     String urlStarLastName = (String)session.getAttribute("urlStarLastName");
+    String urlMethod = (String)session.getAttribute("method");
+    String urlPage = (String)session.getAttribute("page");
 
     //Create a list of URL parameters
     HashMap<String,String> urlParams = new HashMap<String,String>();
@@ -60,6 +62,12 @@
     }
     if (urlStarLastName != null){
         urlParams.put("starLastName",urlStarLastName);
+    }
+    if (urlMethod != null){
+        urlParams.put("method",urlMethod);
+    }
+    if (urlPage != null){
+        urlParams.put("page",urlPage);
     }
 
 %>
@@ -114,11 +122,6 @@
                 <div id="horiznav_nav" class="ac mt8 ml0 mr0"></div>
 
                 <div class="normal_header clearfix pt16">
-                    <div class="fl-r di-ib fs11 fw-n">
-                        <div style="float: right;"><span class="bgColor1" style="padding: 2px;">[1] <a
-                                href="/anime.php?letter=A&amp;show=50">2</a> <a href="/anime.php?letter=A&amp;show=100">3</a> ... <a
-                                href="/anime.php?letter=A&amp;show=650">14</a></span></div>
-                    </div>
                     Titles
                 </div>
 
@@ -127,36 +130,49 @@
                         <tbody>
                         <tr>
                             <td class="borderClass bgColor1" valign="top" width="50"></td>
-                            <td class="borderClass bgColor1 ac fw-b" valign="top">Title
-                                <br>
-                                <%
-                                    out.println("<a href='./MovieList?method=AscYear" + "'>Asc&uarr;</a>&nbsp;<a href='./MovieList?method=DescYear" + "'>Desc&darr;</a></td>");
-                                %>
-                            </td>
+                            <td class="borderClass bgColor1 ac fw-b" valign="top">Title</td>
+
                             <%--<td class="borderClass bgColor1 ac fw-b" width="40" nowrap="">--%>
                                 <%--<a href="?letter=A&amp;sy=0&amp;sm=0&amp;sd=0&amp;ey=0&amp;em=0&amp;ed=0&amp;o=4&amp;w=1"><i--%>
                                     <%--class="fa fa-sort ml2"></i></a></td>--%>
-                            <td class="borderClass bgColor1 ac fw-b" width="45" nowrap="">
-                                Year
-                                <%
+                            <td class="borderClass bgColor1 ac fw-b" width="135" nowrap="">
+
+                                <%--Added sorting method checks--%>
+                                <%--Apply options based on type on sort. First checks for movie genre and then checks all attributes for various search conditions--%>
+                                    <%
                                     String options = "";
                                     String genreInstance = request.getParameter("movieGenre");
                                     String titleInstance = request.getParameter("movieTitle");
+                                    String yearInstance = request.getParameter("movieYear");
                                     String directorInstance = request.getParameter("movieDirector");
+                                    String starFirstNameInstance = request.getParameter("starFirstName");
+                                    String starLastNameInstance = request.getParameter("starLastName");
+
                                     if (genreInstance != null) {
-                                        options += "&genre=" + genreInstance;
+                                        options += "&movieGenre=" + genreInstance;
                                     }
                                     if (titleInstance != null) {
-                                        options += "&title=" + titleInstance;
+                                        options += "&movieTitle=" + titleInstance;
+                                    }
+                                    if (yearInstance != null) {
+                                        options += "&movieYear=" + yearInstance;
                                     }
                                     if (directorInstance != null) {
-                                        options += "&director=" + directorInstance;
+                                        options += "&movieDirector=" + directorInstance;
+                                    }
+                                    if (starFirstNameInstance != null) {
+                                        options += "&starFirstName=" + starFirstNameInstance;
+                                    }
+                                    if (starLastNameInstance != null) {
+                                        options += "&starLastName=" + starLastNameInstance;
                                     }
 
-                                out.println("<a href='./MovieList?method=AscYear" + options + "'>Asc&uarr;</a>&nbsp;<a href='./MovieList?method=DescYear" + options + "'>Desc&darr;</a></td>");
-                                %>
+                                    //clicking on sort by year or sorting by title appends session parameter options and displays the results in sorted order
+                                    out.println("<a href='./MovieList?method=AscYear" + options + "'>AscYear </a> &nbsp <a href='./MovieList?method=DescYear" + options + "'> DescYear</a></td>");
+                                    out.println("<a href='./MovieList?method=AscTitle" + options + "'>AscTitle </a> &nbsp <a href='./MovieList?method=DescTitle" + options + "'> DescTitle</a></td>");
 
-                            </td>
+
+                                %>
                             <td class="borderClass bgColor1 ac fw-b" width="40">Quantity</td>
 
                         </tr>
@@ -204,25 +220,33 @@
                         </tr>
                         <%
                             List<Movie> movies = (List<Movie>) request.getAttribute("movies");
-                            for (Movie movie : movies ) {
+                            Integer ipage = (Integer) request.getAttribute("page");
+                            String sortMethod = (String) request.getAttribute("method");
+                            int placeholder = ipage == null ? 1 : ipage;
+                            int itemsPerPage = 10;
+                            int numberOfMoviePages = (int) Math.ceil(movies.size()/itemsPerPage);
+                            int offset = (placeholder - 1) * itemsPerPage;
+
+                            for (int i = offset; i < offset + itemsPerPage && i < movies.size(); i++){
+                                Movie movie = movies.get(i);
                                 out.println("<tr>");
                                 out.println("<td class=\"borderClass bgColor0\" valign=\"top\" width=\"50\">");
                                 out.println("<img width=\"50\" height=\"70\" border=\"0\" src=\"" + movie.bannerURL + "\">");
                                 out.println("</td>");
                                 out.println("<td class=\"borderClass bgColor0\" valign=\"top\">" +
-                                        "<a href=../movie.jsp?id=" + movie.id + ">" +
+                                        "<a href=//TODO>" +
                                         "<strong>" +
                                         movie.title + "</strong>" +
                                         "</a>");
 
-                                out.println("<td class=\"borderClass ac bgColor0\" width=\"45\">" + movie.year + "</td>");
+                                out.println("<td class=\"borderClass ac bgColor0\" width=\"50\">" + movie.year + "</td>");
                                 out.println("<td class=\"borderClass ac bgColor0\" width=\"40\">");
                                 out.println("<form action = '/servlet/ShoppingCart' method = 'get'>");
 
                                 int quant = 0;
-                                for (int i = 0; i < shoppingCart.size(); i++){
-                                    if (shoppingCart.get(i).id.equals(movie.id) && Integer.parseInt(shoppingCart.get(i).quantity) > 1){
-                                        quant = Integer.parseInt(shoppingCart.get(i).quantity);
+                                for (int j = 0; j < shoppingCart.size(); j++){
+                                    if (shoppingCart.get(j).id.equals(movie.id) && Integer.parseInt(shoppingCart.get(j).quantity) > 1){
+                                        quant = Integer.parseInt(shoppingCart.get(j).quantity);
                                         break;
                                     }
                                 }
@@ -238,6 +262,16 @@
                                 out.println("<input type = 'hidden' value = 'true' name = 'movieList'>");
                                 out.println("</td><td class=\"borderClass ac bgColor0\" width=\"50\"> <input type = 'submit' value = 'Add to Cart'></form> </td>");
                                 out.println("</tr>");
+                            }
+
+                            //applies sorting condition if it exists along with options when clicking on a page link
+                            for (Integer k = 1; k <= numberOfMoviePages; k++){
+                                if (sortMethod!=null) {
+                                    out.println("&nbsp <a href=\"MovieList?method=" + sortMethod + "&page=" + k.toString() + options + "\">"+ k.toString() + "</a> ");
+                                }else {
+                                    out.println("&nbsp <a href=\"MovieList?page=" + k.toString() + options + "\">"+ k.toString() + "</a> ");
+
+                                }
                             }
                         %>
 
