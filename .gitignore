@@ -44,3 +44,5 @@ crashlytics.properties
 crashlytics-build.properties
 fabric.properties
 
+/WEB-INF/classes/
+/WEB-INF/src/movies/Constants.java
