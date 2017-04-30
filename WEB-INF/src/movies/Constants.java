@@ -6,5 +6,5 @@ package movies;
 
 public final class Constants {
     public static final String USER = "root";
-    public static final String PASSWORD = "";
+    public static final String PASSWORD = "Apple07";
 }

@@ -6,6 +6,7 @@
 %>
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="movies.Movie" %>
+<%@ page import="movies.Constants" %>
 <%
 
     //Get session attributes
@@ -19,46 +20,135 @@
         out.println("<script> window.location.replace('index.html'); </script>");
     }
 
+    //Get total movie quantity in shopping cart
+    int totalQuantity = 0;
+    ArrayList<Movie> shoppingCart = new ArrayList<Movie>();
+    if (session.getAttribute("shoppingCart") != null){
+        shoppingCart = (ArrayList<Movie>)session.getAttribute("shoppingCart");
+        for (int i = 0; i < shoppingCart.size(); i++){
+            totalQuantity += Integer.parseInt(shoppingCart.get(i).quantity);
+        }
+    }
+
 %>
 <!DOCTYPE html>
 <html>
 <head>
     <title>Shopping Cart</title>
+    <link rel="stylesheet" type="text/css" href="https://myanimelist.cdn-dena.com/static/assets/css/pc/style-cfe6975aa5.css">
 </head>
-<body>
+<body onload=" " class="page-common">
+<div id="myanimelist">
+    <div class="wrapper">
+        <div id="headerSmall" style="background: url(../resources/logo_small.png) center top no-repeat rgba(0, 0, 0, 0)">
+            <a href="/" class="link-mal-logo">Fabflix</a>
+        </div>
+        <div id="menu" class="">
+            <div id="menu_left">
+                <ul id="nav">
+                    <li class="small">
+                        <%--Must be ../ because the current path is servlet/--%>
+                        <a href="../search.jsp" class="non-link">Search</a>
+                    </li>
+                    <li class="small">
+                        <a href="../browse.jsp" class="non-link">Browse</a>
+                    </li>
+                    <%
+                        if (totalQuantity < 10){
+                            out.println("<li class=\"large\" style = 'width:160px;'>");
+                        } else if (totalQuantity < 100){
+                            out.println("<li class=\"large\" style = 'width:170px;'>");
+                        } else if (totalQuantity < 1000){
+                            out.println("<li class=\"large\" style = 'width:180px;'>");
+                        } else if (totalQuantity < 10000){
+                            out.println("<li class=\"large\" style = 'width:190px;'>");
+                        } else {
+                            out.println("<li class=\"large\" style = 'width:200px;'>");
+                        }
+                    %>
+                    <a href="../shoppingCart.jsp" class="non-link">Checkout (<% out.println(totalQuantity); %> items) </a>
+                    </li>
+                    <li class="small">
+                        <a href="/servlet/Logout" class="non-link">Logout</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div id="contentWrapper" itemscope="" itemtype="http://schema.org/Product">
+            <div><h1 class="h1">Shopping Cart</h1></div>
+            <div id="content">
 
-<div style = 'margin:0px auto; width:900px; text-align:center;'>
+                <div class="js-categories-seasonal js-block-list list">
+                    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+                        <tbody>
 
-<h1>Shopping Cart</h1>
+                        <%
+                            if (session.getAttribute("shoppingCart") == null){
+                                out.println("<tr><td><div style = 'margin-top:5px;'>No items in shopping cart.</div></td></tr>");
+                            } else {
+                                if (shoppingCart.size() == 0){
+                                    out.println("<tr><td><div style = 'margin-top:5px;'>No items in shopping cart.</div></td></tr>");
+                                } else {
+                                    for (int i = 0; i < shoppingCart.size(); i++) {
+                                        out.println("<tr>");
+                                        out.println("<td class=\"borderClass bgColor0\" valign=\"top\" width=\"50\">");
+                                        out.println("<img width=\"50\" height=\"70\" border=\"0\" src=\"" + shoppingCart.get(i).bannerURL + "\">");
+                                        out.println("</td>");
+                                        out.println("<td class=\"borderClass bgColor0\" valign=\"top\">" +
+                                                "<a href=../movie.jsp?id=" + shoppingCart.get(i).id + ">" +
+                                                "<strong>" +
+                                                shoppingCart.get(i).title + "</strong>" +
+                                                "</a>");
 
-<%
-    //need to change UI for this cuz it looks bad lol
+                                        out.println("<td class=\"borderClass ac bgColor0\" width=\"45\"></td>");
+                                        out.println("<td class=\"borderClass ac bgColor0\" width=\"40\">");
+                                        out.println("<form action = '/servlet/ShoppingCart' method = 'get'>");
+                                        out.println("<input type = 'text' name = 'movieQuantity' value = '" + shoppingCart.get(i).quantity + "' maxlength = '4' size = '4' style = 'text-align:center;'>");
+                                        out.println("<input type = 'hidden' value = '" + shoppingCart.get(i).id + "' name = 'movieId'>");
+                                        out.println("</td><td class=\"borderClass ac bgColor0\" width=\"50\"> <input type = 'submit' value = 'Update Cart'></form> </td>");
+                                        out.println("</tr>");
+                                    }
+                                }
+                            }
+                        %>
 
-    ArrayList<Movie> shoppingCart;
-    if (session.getAttribute("shoppingCart") != null) {
-        shoppingCart = (ArrayList<Movie>)session.getAttribute("shoppingCart");
-        if (shoppingCart.size() == 0){
-            out.println("No items in shopping cart.");
-        } else {
-            out.println("<table frame='vsides' cellspacing='20' width='500px' align='center'>");
-            out.println("<tr><td></td><td><b>Title</b><td><b>Year</b></td><td><b>Quantity</b></td></tr>");
-            for (int i = 0; i < shoppingCart.size(); i++) {
-                out.println("<tr>");
-                out.println("<td valign='top' width='50'><img width='50' height='70' border='0' src='" + shoppingCart.get(i).bannerURL + "'></td>");
-                out.println("<td valign='top'><a href='#'><strong>" + shoppingCart.get(i).title + "</strong></a></td>");
-                out.println("<td valign='top' width='45'>" + shoppingCart.get(i).year + "</td>");
-                out.println("<td valign='top' width='40'>" + shoppingCart.get(i).quantity + "</td>");
-                out.println("</tr>");
-            }
-            out.println("</table>");
-        }
-        out.println("<a href = 'checkout.jsp'>Proceed to checkout</a>");
-    } else {
-        out.println("No items in shopping cart.");
-    }
-%>
+                        </tbody>
+                    </table>
+                    <%
+                        if (totalQuantity > 0) {
+                            out.println("<div style = 'margin:0px auto; width:200px; text-align:center;'><div style = 'margin-top:10px;'><a href = 'checkout.jsp'> Proceed to Checkout</a></div></div>");
+                        }
+                    %>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
 
 </div>
 
+<script>
+    var header = {
+        alphabet: "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+    };
+
+    function makeUL(string) {
+        var list = document.createElement('ul');
+
+        for (var i = 0; i < string.length; i++) {
+            var item = document.createElement('li');
+            var link = document.createElement('a');
+            link.innerHTML = string.charAt(i);
+            link.href = '/servlet/MovieList?movieTitle=' + string.charAt(i);
+
+            item.appendChild(link);
+            list.appendChild(item);
+        }
+
+        return list;
+    }
+    document.getElementById('horiznav_nav').appendChild(makeUL(header.alphabet));
+</script>
 </body>
 </html>

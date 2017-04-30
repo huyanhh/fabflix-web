@@ -101,6 +101,9 @@
                     %>
                         <a href="../shoppingCart.jsp" class="non-link">Checkout (<% out.println(totalQuantity); %> items) </a>
                     </li>
+                    <li class="small">
+                        <a href="/servlet/Logout" class="non-link">Logout</a>
+                    </li>
                 </ul>
             </div>
         </div>

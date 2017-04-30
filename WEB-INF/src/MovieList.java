@@ -103,6 +103,7 @@ public class MovieList extends HttpServlet {
                             if (movieQuantity.equals("0")) {
                                 shoppingCart.remove(i);
                             }
+                            break;
                         }
                     }
                     //If movie not found in shopping cart and quantity is > 0, then add it to the shopping cart
@@ -147,25 +148,6 @@ public class MovieList extends HttpServlet {
                         shoppingCart.add(scMovie);
 
                         movieStatement.close();
-                    }
-
-                    //Now to test, lets print out the entire shoppingCart
-                    for (int i = 0; i < shoppingCart.size(); i++) {
-                        out.println("Movie ID: " + shoppingCart.get(i).id + "<br>");
-                        out.println("Movie Title: " + shoppingCart.get(i).title + "<br>");
-                        out.println("Movie Year: " + shoppingCart.get(i).year + "<br>");
-                        out.println("Movie Trailer URL: " + shoppingCart.get(i).trailerURL + "<br>");
-                        out.println("Movie Banner URL: " + shoppingCart.get(i).bannerURL + "<br>");
-                        out.println("Movie Quantity: " + shoppingCart.get(i).quantity + "<br>");
-                        out.println("Movie Stars: <br>");
-                        for (int j = 0; j < shoppingCart.get(i).stars.size(); j++) {
-                            out.println(shoppingCart.get(i).stars.get(j) + "<br>");
-                        }
-                        out.println("Movie Genres: <br>");
-                        for (int j = 0; j < shoppingCart.get(i).genres.size(); j++) {
-                            out.println(shoppingCart.get(i).genres.get(j) + "<br>");
-                        }
-                        out.println("<br>");
                     }
 
                 }
