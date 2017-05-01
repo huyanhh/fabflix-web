@@ -267,7 +267,7 @@
                                         <td class="pb24"><br><br>
                                             <h2>
                                                 <div class="floatRightHeader"></div>
-                                                Characters &amp; Voice Actors
+                                                Main Actors
                                             </h2>
                                             <%
                                                 for (Star actor : movie.stars) {

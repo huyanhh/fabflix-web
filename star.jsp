@@ -131,7 +131,7 @@
             </div>
         </div>
         <div id="contentWrapper" itemscope="" itemtype="http://schema.org/Product">
-            <div><h1 class="h1"><span itemprop="name"><% out.println(star.name); %></span></h1></div>
+            <div><h1 class="h1"><span itemprop="name"><% out.println(star.name + " (" + star.id + ")"); %></span></h1></div>
             <div id="content">
 
                 <table border="0" cellpadding="0" cellspacing="0" width="100%">

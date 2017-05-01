@@ -189,6 +189,10 @@
                             int numberOfMoviePages = (int) Math.ceil(movies.size()/itemsPerPage);
                             int offset = (placeholder - 1) * itemsPerPage;
 
+                            if (movies.isEmpty())
+                                out.println("<tr><td class=\"borderClass bgColor0\" valign=\"top\" width=\"300\">" +
+                                        "No titles that matched your query were found</td></tr>");
+
                             for (int i = offset; i < offset + itemsPerPage && i < movies.size(); i++){
                                 Movie movie = movies.get(i);
                                 out.println("<tr>");
