@@ -201,7 +201,7 @@ public class MovieList extends HttpServlet {
                     //Create PreparedStatements for displaying list of genres and stars
                     PreparedStatement genreStatement, starsStatement;
                     String genreQuery = "select name from genres where id in (select genre_id from genres_in_movies where movie_id = ?);";
-                    String starsQuery = "select first_name, last_name from stars where id in (select star_id from stars_in_movies where movie_id = ?);";
+                    String starsQuery = "select first_name, last_name, id from stars where id in (select star_id from stars_in_movies where movie_id = ?);";
                     genreStatement = dbcon.prepareStatement(genreQuery);
                     starsStatement = dbcon.prepareStatement(starsQuery);
 
@@ -229,7 +229,10 @@ public class MovieList extends HttpServlet {
                         starsStatement.setString(1, resultId);
                         ResultSet starsResultSet = starsStatement.executeQuery();
                         while (starsResultSet.next()) {
-                            String resultName = starsResultSet.getString("first_name") + " " + starsResultSet.getString("last_name");
+                            Star star = new Star();
+                            star.name = starsResultSet.getString("first_name") + " " + starsResultSet.getString("last_name");
+                            star.id = starsResultSet.getString("id");
+                            movie.stars.add(star);
                         }
                         starsResultSet.close();
                         movies.add(movie);
@@ -239,8 +242,6 @@ public class MovieList extends HttpServlet {
                     //Close prepared statements
                     genreStatement.close();
                     starsStatement.close();
-
-                    out.println("</table>");
                 }
 
                 //Close ResultSet, Statement, and Connection to Database
