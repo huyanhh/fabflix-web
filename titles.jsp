@@ -130,47 +130,47 @@
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tbody>
                         <tr>
+                            <%
+                                String options = "";
+                                String genreInstance = request.getParameter("movieGenre");
+                                String titleInstance = request.getParameter("movieTitle");
+                                String yearInstance = request.getParameter("movieYear");
+                                String directorInstance = request.getParameter("movieDirector");
+                                String starFirstNameInstance = request.getParameter("starFirstName");
+                                String starLastNameInstance = request.getParameter("starLastName");
+
+                                if (genreInstance != null) {
+                                    options += "&movieGenre=" + genreInstance;
+                                }
+                                if (titleInstance != null) {
+                                    options += "&movieTitle=" + titleInstance;
+                                }
+                                if (yearInstance != null) {
+                                    options += "&movieYear=" + yearInstance;
+                                }
+                                if (directorInstance != null) {
+                                    options += "&movieDirector=" + directorInstance;
+                                }
+                                if (starFirstNameInstance != null) {
+                                    options += "&starFirstName=" + starFirstNameInstance;
+                                }
+                                if (starLastNameInstance != null) {
+                                    options += "&starLastName=" + starLastNameInstance;
+                                }
+                            %>
                             <td class="borderClass bgColor1" valign="top" width="50"></td>
                             <%--Added sorting method checks--%>
                             <%--Apply options based on type on sort. First checks for movie genre and then checks all attributes for various search conditions--%>
-                            <td class="borderClass bgColor1 ac fw-b" valign="top">Title</td>
+                            <td class="borderClass bgColor1 ac fw-b" valign="top">Title
+                                <%
+                                    //clicking on sort by year or sorting by title appends session parameter options and displays the results in sorted order
+                                    out.println("<a href='./MovieList?method=AscTitle" + options + "'>AscTitle </a>&nbsp <a href='./MovieList?method=DescTitle" + options + "'> DescTitle</a>");
+                                %>
+                            </td>
                             <td class="borderClass bgColor1 ac fw-b" width="45" nowrap="">
                                 Year
-                                    <%
-                                    String options = "";
-                                    String genreInstance = request.getParameter("movieGenre");
-                                    String titleInstance = request.getParameter("movieTitle");
-                                    String yearInstance = request.getParameter("movieYear");
-                                    String directorInstance = request.getParameter("movieDirector");
-                                    String starFirstNameInstance = request.getParameter("starFirstName");
-                                    String starLastNameInstance = request.getParameter("starLastName");
-
-                                    if (genreInstance != null) {
-                                        options += "&movieGenre=" + genreInstance;
-                                    }
-                                    if (titleInstance != null) {
-                                        options += "&movieTitle=" + titleInstance;
-                                    }
-                                    if (yearInstance != null) {
-                                        options += "&movieYear=" + yearInstance;
-                                    }
-                                    if (directorInstance != null) {
-                                        options += "&movieDirector=" + directorInstance;
-                                    }
-                                    if (starFirstNameInstance != null) {
-                                        options += "&starFirstName=" + starFirstNameInstance;
-                                    }
-                                    if (starLastNameInstance != null) {
-                                        options += "&starLastName=" + starLastNameInstance;
-                                    }
-
-                                    //clicking on sort by year or sorting by title appends session parameter options and displays the results in sorted order
-                                    out.println("<a href='./MovieList?method=AscYear" + options + "'>AscYear </a> &nbsp <a href='./MovieList?method=DescYear" + options + "'> DescYear</a></td>");
-                                    out.println("<a href='./MovieList?method=AscTitle" + options + "'>AscTitle </a> &nbsp <a href='./MovieList?method=DescTitle" + options + "'> DescTitle</a></td>");
-
-
-                                %>
-                            <td class="borderClass bgColor1 ac fw-b" width="40">Quantity</td>
+                                <% out.println("<a href='./MovieList?method=AscYear" + options + "'>AscYear </a>&nbsp<a href='./MovieList?method=DescYear" + options + "'> DescYear</a></td>"); %>
+                            </td>
                             <td class="borderClass bgColor1 ac fw-b" width="40" nowrap="">Director</td>
                             <td class="borderClass bgColor1 ac fw-b" width="50" nowrap="">Stars</td>
                             <td class="borderClass bgColor1 ac fw-b" width="50" nowrap="">Genres</td>
