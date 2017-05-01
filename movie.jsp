@@ -230,7 +230,7 @@
                             <div class="js-scrollfix-bottom-rel"><a name="lower"></a>
                                 <div id="horiznav_nav" style="margin: 5px 0 10px 0;">
                                     <ul><li>
-                                        <a href="https://myanimelist.net/anime/25777/Shingeki_no_Kyojin_Season_2" class="horiznav_active">Details</a>
+                                        <a href="https://myanimelist.net/anime/25777/Shingeki_no_Kyojin_Season_2" class="horiznav_active">Trailer</a>
                                     </li></ul>
                                 </div>
 
