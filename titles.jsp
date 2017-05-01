@@ -70,6 +70,8 @@
     }
     if (urlPage != null){
         urlParams.put("page",urlPage);
+    } else {
+        urlPage = "1";
     }
     if (urlNumPageResults != null){
         urlParams.put("numPageResults",urlNumPageResults);
@@ -191,14 +193,15 @@
                             <%--Added sorting method checks--%>
                             <%--Apply options based on type on sort. First checks for movie genre and then checks all attributes for various search conditions--%>
                             <td class="borderClass bgColor1 ac fw-b" valign="top">Title
+                                <br>
                                 <%
                                     //clicking on sort by year or sorting by title appends session parameter options and displays the results in sorted order
-                                    out.println("<br><a href='./MovieList?method=AscTitle" + options + "'>AscTitle </a><br> <a href='./MovieList?method=DescTitle" + options + "'> DescTitle</a>");
+                                    out.println("<a href='./MovieList?method=AscTitle" + options + "'>Asc</a>&nbsp <a href='./MovieList?method=DescTitle" + options + "'>Desc</a>");
                                 %>
                             </td>
                             <td class="borderClass bgColor1 ac fw-b" width="45" nowrap="">
                                 Year
-                                <% out.println("<a href='./MovieList?method=AscYear" + options + "'>AscYear </a>&nbsp<a href='./MovieList?method=DescYear" + options + "'> DescYear</a></td>"); %>
+                                <% out.println("<a href='./MovieList?method=AscYear" + options + "'>Asc</a>&nbsp<a href='./MovieList?method=DescYear" + options + "'>Desc</a></td>"); %>
                             </td>
                             <td class="borderClass bgColor1 ac fw-b" width="40" nowrap="">Director</td>
                             <td class="borderClass bgColor1 ac fw-b" width="50" nowrap="">Stars</td>
@@ -215,6 +218,10 @@
                             double itemsPerPageConverted = 1.0* itemsPerPage;
                             int numberOfMoviePages = (int) Math.ceil(movies.size()/itemsPerPageConverted);
                             int offset = (placeholder - 1) * itemsPerPage;
+
+                            if (movies.isEmpty())
+                                out.println("<tr><td class=\"borderClass bgColor0\" valign=\"top\" width=\"300\">" +
+                                        "No titles that matched your query were found</td></tr>");
 
                             for (int i = offset; i < offset + itemsPerPage && i < movies.size(); i++){
                                 Movie movie = movies.get(i);
@@ -260,20 +267,26 @@
                                 out.println("</td><td class=\"borderClass ac bgColor0\" width=\"50\"> <input type = 'submit' value = 'Add to Cart'></form> </td>");
                                 out.println("</tr>");
                             }
-
+                        %>
+                        <span style="padding: 2px; background-color: rgba(192,198,255,0.59)">
+                        <%
                             //applies sorting condition if it exists along with options when clicking on a page link
                             if (numberOfMoviePages > 1) {
-                                out.println("<b> Page Results: </b>");
+                                out.println("<b> Pages: </b>");
                                 for (Integer k = 1; k <= numberOfMoviePages; k++) {
+                                    String currentPage = k.toString();
+                                    if (currentPage.equals(urlPage))
+                                        currentPage = "[" + currentPage + "]";
                                     if (sortMethod != null) {
-                                        out.println("&nbsp <a href=\"MovieList?numPageResults=" + urlParams.get("numPageResults") + "&method=" + sortMethod + "&page=" + k.toString() + options + "\">" + k.toString() + "</a> ");
+                                        out.println("&nbsp <a href=\"MovieList?numPageResults=" + urlParams.get("numPageResults") + "&method=" + sortMethod + "&page=" + k.toString() + options + "\">" + currentPage + "</a> ");
                                     } else {
-                                        out.println("&nbsp <a href=\"MovieList?numPageResults=" + urlParams.get("numPageResults") + "&page=" + k.toString() + options + "\">" + k.toString() + "</a> ");
+                                        out.println("&nbsp <a href=\"MovieList?numPageResults=" + urlParams.get("numPageResults") + "&page=" + k.toString() + options + "\">" + currentPage + "</a> ");
 
                                     }
                                 }
                             }
                         %>
+                        </span>
 
                         </tbody>
                     </table>

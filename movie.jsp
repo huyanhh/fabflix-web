@@ -220,8 +220,9 @@
                                 </div>
                                 <div class="spaceit">
                                     <span class="dark_text">Genres:</span>
-                                    <% for (String genre : movie.genres)
-                                        out.println("<a href=servlet/MovieList?movieGenre=" + genre + ">" + genre + ",</a>");
+                                    <% for (int i = 0; i < movie.genres.size(); i++)
+                                        out.println("<a href=servlet/MovieList?movieGenre=" + movie.genres.get(i) + ">"
+                                                + movie.genres.get(i) + (i != movie.genres.size() - 1 ? "," : "") + "</a>");
                                     %>
                                 </div>
                             </div>
@@ -230,7 +231,7 @@
                             <div class="js-scrollfix-bottom-rel"><a name="lower"></a>
                                 <div id="horiznav_nav" style="margin: 5px 0 10px 0;">
                                     <ul><li>
-                                        <a href="https://myanimelist.net/anime/25777/Shingeki_no_Kyojin_Season_2" class="horiznav_active">Details</a>
+                                        <a href="https://myanimelist.net/anime/25777/Shingeki_no_Kyojin_Season_2" class="horiznav_active">Trailer</a>
                                     </li></ul>
                                 </div>
 
@@ -267,7 +268,7 @@
                                         <td class="pb24"><br><br>
                                             <h2>
                                                 <div class="floatRightHeader"></div>
-                                                Characters &amp; Voice Actors
+                                                Main Actors
                                             </h2>
                                             <%
                                                 for (Star actor : movie.stars) {
