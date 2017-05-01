@@ -220,8 +220,9 @@
                                 </div>
                                 <div class="spaceit">
                                     <span class="dark_text">Genres:</span>
-                                    <% for (String genre : movie.genres)
-                                        out.println("<a href=servlet/MovieList?movieGenre=" + genre + ">" + genre + ",</a>");
+                                    <% for (int i = 0; i < movie.genres.size(); i++)
+                                        out.println("<a href=servlet/MovieList?movieGenre=" + movie.genres.get(i) + ">"
+                                                + movie.genres.get(i) + (i != movie.genres.size() - 1 ? "," : "") + "</a>");
                                     %>
                                 </div>
                             </div>

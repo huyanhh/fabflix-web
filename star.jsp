@@ -215,58 +215,5 @@
     </div>
 </div><!-- #myanimelist -->
 
-
-<div id="evolve_footer"></div>
-
-<script type="text/javascript">
-    window.MAL.magia = "06410c4e6b2518e9add8f6df0ccb2da2876bb8c980aacb43a8dcaa8153c0f92c";
-    window.MAL.madoka = "hZrDKm9k6FVRnqd3i%=K";
-
-    window.MAL.SLVK = "g4OvMLVOmEI3J8u7dt8f8+mAuualsqCo";
-    window.MAL.CDN_URL = "https://myanimelist.cdn-dena.com";
-
-    window.MAL.CURRENT_TUTORIAL_STEP_ID = null;
-    window.MAL.USER_NAME = "blankpaper"
-</script>
-
-
-<div id="fancybox-tmp" style="padding: 70px;"></div>
-<div id="fancybox-loading" style="display: none;">
-    <div></div>
-</div>
-<div id="fancybox-overlay" style="background-color: rgb(102, 102, 102); opacity: 0.3; display: none;"></div>
-<div id="fancybox-wrap"
-     style="opacity: 1; width: 1172.8px; height: 673.6px; top: 89.2px; left: 151.6px; display: none;">
-    <div id="fancybox-outer">
-        <div class="fancy-bg" id="fancy-bg-n"></div>
-        <div class="fancy-bg" id="fancy-bg-ne"></div>
-        <div class="fancy-bg" id="fancy-bg-e"></div>
-        <div class="fancy-bg" id="fancy-bg-se"></div>
-        <div class="fancy-bg" id="fancy-bg-s"></div>
-        <div class="fancy-bg" id="fancy-bg-sw"></div>
-        <div class="fancy-bg" id="fancy-bg-w"></div>
-        <div class="fancy-bg" id="fancy-bg-nw"></div>
-        <div id="fancybox-inner" style="top: 0px; left: 0px; width: 1172.8px; height: 673.6px; overflow: hidden;"></div>
-        <a id="fancybox-close" style="display: none;"></a><a href="javascript:;" id="fancybox-left"
-                                                             style="display: none;"><span class="fancy-ico"
-                                                                                          id="fancybox-left-ico"></span></a><a
-            href="javascript:;" id="fancybox-right" style="display: none;"><span class="fancy-ico"
-                                                                                 id="fancybox-right-ico"></span></a>
-    </div>
-</div>
-<div id="fb-root" class=" fb_reset">
-    <div style="position: absolute; top: -10000px; height: 0px; width: 0px;">
-        <div></div>
-    </div>
-    <div style="position: absolute; top: -10000px; height: 0px; width: 0px;">
-        <div>
-            <iframe name="fb_xdm_frame_https" frameborder="0" allowtransparency="true" allowfullscreen="true"
-                    scrolling="no" id="fb_xdm_frame_https" aria-hidden="true"
-                    title="Facebook Cross Domain Communication Frame" tabindex="-1"
-                    src="https://staticxx.facebook.com/connect/xd_arbiter/r/87XNE1PC38r.js?version=42#channel=f98bce420245c8&amp;origin=https%3A%2F%2Fmyanimelist.net"
-                    style="border: none;"></iframe>
-        </div>
-    </div>
-</div>
 </body>
 </html>
