@@ -41,6 +41,7 @@
     String urlStarLastName = (String)session.getAttribute("urlStarLastName");
     String urlMethod = (String)session.getAttribute("method");
     String urlPage = (String)session.getAttribute("page");
+    String urlNumPageResults = (String)session.getAttribute("numPageResults");
 
     //Create a list of URL parameters
     HashMap<String,String> urlParams = new HashMap<String,String>();
@@ -69,6 +70,9 @@
     }
     if (urlPage != null){
         urlParams.put("page",urlPage);
+    }
+    if (urlNumPageResults != null){
+        urlParams.put("numPageResults",urlNumPageResults);
     }
 
 %>
@@ -123,7 +127,32 @@
                 <div id="horiznav_nav" class="ac mt8 ml0 mr0"></div>
 
                 <div class="normal_header clearfix pt16">
-                    Titles
+                    <table border="0" width="100%">
+                        <tr>
+                            <td width="76%">Titles</td>
+                            <%
+
+                                out.println("<td align='right'>");
+                                out.println("<b> # of Results Per page</b>");
+                                out.println("</td>");
+                                out.println("<td align='right'>");
+                                out.println("<form action = '/servlet/MovieList' method='post'>");
+                                out.println("<input type = 'text' maxlength='4' size='4' name='numPageResults' value=" + Integer.parseInt(urlParams.get("numPageResults")) + " style='text-align:center;'>");
+                                for (Map.Entry<String,String> e : urlParams.entrySet()) {
+                                    if (e.getKey().equals("page")){
+                                        out.println("<input type = 'hidden' value = '1' name = '" + e.getKey() + "'>"); //after user adjusts number of results per page, have it redirect to page 1
+                                    } else {
+                                        out.println("<input type = 'hidden' value = '" + e.getValue() + "' name = '" + e.getKey() + "'>");
+                                    }
+                                }
+                                out.println("<input type = 'hidden' value = 'true' name = 'movieList'>");
+                                out.println("<input type = 'submit' value='Submit' name='submit'>");
+                                out.println("</form>");
+                                out.println("</td>");
+
+                            %>
+                        </tr>
+                    </table>
                 </div>
 
                 <div class="js-categories-seasonal js-block-list list">
@@ -164,7 +193,7 @@
                             <td class="borderClass bgColor1 ac fw-b" valign="top">Title
                                 <%
                                     //clicking on sort by year or sorting by title appends session parameter options and displays the results in sorted order
-                                    out.println("<a href='./MovieList?method=AscTitle" + options + "'>AscTitle </a>&nbsp <a href='./MovieList?method=DescTitle" + options + "'> DescTitle</a>");
+                                    out.println("<br><a href='./MovieList?method=AscTitle" + options + "'>AscTitle </a><br> <a href='./MovieList?method=DescTitle" + options + "'> DescTitle</a>");
                                 %>
                             </td>
                             <td class="borderClass bgColor1 ac fw-b" width="45" nowrap="">
@@ -182,8 +211,9 @@
                             Integer ipage = (Integer) request.getAttribute("page");
                             String sortMethod = (String) request.getAttribute("method");
                             int placeholder = ipage == null ? 1 : ipage;
-                            int itemsPerPage = 10;
-                            int numberOfMoviePages = (int) Math.ceil(movies.size()/itemsPerPage);
+                            int itemsPerPage = Integer.parseInt(urlParams.get("numPageResults"));
+                            double itemsPerPageConverted = 1.0* itemsPerPage;
+                            int numberOfMoviePages = (int) Math.ceil(movies.size()/itemsPerPageConverted);
                             int offset = (placeholder - 1) * itemsPerPage;
 
                             for (int i = offset; i < offset + itemsPerPage && i < movies.size(); i++){
@@ -232,12 +262,15 @@
                             }
 
                             //applies sorting condition if it exists along with options when clicking on a page link
-                            for (Integer k = 1; k <= numberOfMoviePages; k++){
-                                if (sortMethod!=null) {
-                                    out.println("&nbsp <a href=\"MovieList?method=" + sortMethod + "&page=" + k.toString() + options + "\">"+ k.toString() + "</a> ");
-                                }else {
-                                    out.println("&nbsp <a href=\"MovieList?page=" + k.toString() + options + "\">"+ k.toString() + "</a> ");
+                            if (numberOfMoviePages > 1) {
+                                out.println("<b> Page Results: </b>");
+                                for (Integer k = 1; k <= numberOfMoviePages; k++) {
+                                    if (sortMethod != null) {
+                                        out.println("&nbsp <a href=\"MovieList?numPageResults=" + urlParams.get("numPageResults") + "&method=" + sortMethod + "&page=" + k.toString() + options + "\">" + k.toString() + "</a> ");
+                                    } else {
+                                        out.println("&nbsp <a href=\"MovieList?numPageResults=" + urlParams.get("numPageResults") + "&page=" + k.toString() + options + "\">" + k.toString() + "</a> ");
 
+                                    }
                                 }
                             }
                         %>

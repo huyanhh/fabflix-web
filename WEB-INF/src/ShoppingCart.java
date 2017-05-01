@@ -67,6 +67,7 @@ public class ShoppingCart extends HttpServlet {
             String starLastName = request.getParameter("starLastName");
             String method = request.getParameter("method");
             String page = request.getParameter("page");
+            String numPageResults = request.getParameter("numPageResults");
 
             //Add items to shopping cart if movieId and movieQuantity are both not null (they are in the url as parameters)
             if (movieId != null && movieQuantity != null) {
@@ -167,6 +168,9 @@ public class ShoppingCart extends HttpServlet {
                 }
                 if (page != null){
                     urlParams.put("page",page);
+                }
+                if (numPageResults != null){
+                    urlParams.put("numPageResults",numPageResults);
                 }
                 String url = "../servlet/MovieList?";
                 int count = 0;

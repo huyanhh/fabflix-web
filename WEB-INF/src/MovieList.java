@@ -38,6 +38,7 @@ public class MovieList extends HttpServlet {
         session.removeAttribute("urlStarLastName");
         session.removeAttribute("method");
         session.removeAttribute("page");
+        //session.removeAttribute("numPageResults");
 
         // Gets the page number you are currently on
         String page = request.getParameter("page");
@@ -45,6 +46,17 @@ public class MovieList extends HttpServlet {
         request.setAttribute("page", page == null ? 1 : Integer.parseInt(page));
 
         session.setAttribute("page",page);
+
+        //Get the number of results per page you want to view
+        String numPageResults = request.getParameter("numPageResults");
+
+        if (numPageResults != null){
+            session.setAttribute("numPageResults",numPageResults);
+        } else {
+            if (session.getAttribute("numPageResults") == null){
+                session.setAttribute("numPageResults","10"); //10 is default
+            }
+        }
 
         //Get session attributes
         String customerId = (String)session.getAttribute("customerId");
@@ -81,10 +93,13 @@ public class MovieList extends HttpServlet {
             String movieYear = request.getParameter("movieYear");
             String movieGenre = request.getParameter("movieGenre");
             String movieDirector = request.getParameter("movieDirector");
-            //String movieId = request.getParameter("movieId");
-            //String movieQuantity = request.getParameter("movieQuantity");
             String starFirstName = request.getParameter("starFirstName");
             String starLastName = request.getParameter("starLastName");
+
+            String method = request.getParameter("method");
+            request.setAttribute("method",method);
+
+            session.setAttribute("method",method);
 
             //Handles scenario where user does not type in anything in search bar
             if ((movieTitle != null && movieTitle.length() == 0) && (movieYear != null && movieYear.length() == 0) && (movieDirector != null && movieDirector.length() == 0) && (starFirstName != null && starFirstName.length() == 0) && (starLastName != null && starLastName.length() == 0)){
@@ -134,10 +149,6 @@ public class MovieList extends HttpServlet {
 
                 //Based on provided information, generate a query that can be executed to display movie results
                 String strToFormat = "", query = "";
-                String method = request.getParameter("method");
-                request.setAttribute("method",method);
-
-                session.setAttribute("method",method);
 
                 //If the movieGenre has a length > 1 and no sort method apply do the standard genre search query
                 if (movieGenre.length() > 1 && (method == null || method.isEmpty())){
