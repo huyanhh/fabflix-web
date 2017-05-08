@@ -84,7 +84,9 @@ public class ShoppingCart extends HttpServlet {
                         //Update movieFound to true
                         movieFound = true;
                         //Set the quantity.
-                        shoppingCart.get(i).setQuantity(movieQuantity);
+                        if (Integer.parseInt(movieQuantity) >= 0) {
+                            shoppingCart.get(i).setQuantity(movieQuantity);
+                        }
                         //If quantity is 0, then remove it from the shopping cart
                         if (movieQuantity.equals("0")) {
                             shoppingCart.remove(i);

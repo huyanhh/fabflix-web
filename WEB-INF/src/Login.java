@@ -20,14 +20,26 @@ public class Login extends HttpServlet
     public void doGet(HttpServletRequest request, HttpServletResponse response)
         throws IOException, ServletException
     {
+
+        // Output stream to STDOUT
+        PrintWriter out = response.getWriter();
+
+        //ReCaptcha Check
+        String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
+        System.out.println("gRecaptchaResponse=" + gRecaptchaResponse);
+        // Verify CAPTCHA.
+        boolean valid = VerifyUtils.verify(gRecaptchaResponse);
+        if (!valid) {
+            //errorString = "Captcha invalid!";
+            out.println("<script> alert('ReCaptcha Wrong!'); window.location.replace('../index.html'); </script>");
+            return;
+        }
+
         String loginUser = Constants.USER;
         String loginPasswd = Constants.PASSWORD;
         String loginUrl = "jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false";
 
         response.setContentType("text/html");    // Response mime type
-
-        // Output stream to STDOUT
-        PrintWriter out = response.getWriter();
 
         try
            {

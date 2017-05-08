@@ -6,11 +6,17 @@
   <link rel="stylesheet" href="css/main.css">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+  <script src='https://www.google.com/recaptcha/api.js'></script>
+  <script>
+    function onSubmit(token) {
+      document.getElementById("loginForm").submit();
+    }
+  </script>
 </head>
 <body class="align">
 <h1>Fabflix</h1>
 <div class="grid">
-  <form action = "/servlet/Login" method = "post" class="form login">
+  <form action = "/servlet/Login" method = "post" class="form login" id="loginForm">
 
     <div class="form__field">
       <label for="login__username">
@@ -32,9 +38,13 @@
              required>
     </div>
 
+    <div class="g-recaptcha" data-sitekey="6Le3WyAUAAAAAMUTjClJDn2qHnyDDuvDzEpi4AEe" style="margin-bottom:17px; margin-left:15px; transform:scale(1.055);
+    transform-origin:0 0;"></div>
+
     <div class="form__field">
-      <input type="submit" value="Sign In">
+      <input type = "submit" value = "Sign In">
     </div>
+
   </form>
 </div>
 <svg xmlns="http://www.w3.org/2000/svg" class="icons">
