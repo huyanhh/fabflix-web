@@ -71,6 +71,7 @@ public class ShoppingCart extends HttpServlet {
 
             //Add items to shopping cart if movieId and movieQuantity are both not null (they are in the url as parameters)
             if (movieId != null && movieQuantity != null) {
+                try {
                 //Create a shopping cart if it does not exist already
                 if (session.getAttribute("shoppingCart") == null) {
                     session.setAttribute("shoppingCart", new ArrayList<Movie>());
@@ -94,48 +95,52 @@ public class ShoppingCart extends HttpServlet {
                         break;
                     }
                 }
-                //If movie not found in shopping cart and quantity is > 0, then add it to the shopping cart
-                if (movieFound == false && Integer.parseInt(movieQuantity) > 0) {
-                    //Create a movie object
-                    Statement movieStatement = dbcon.createStatement();
-                    String movieSQL = "select * from movies where id='" + movieId + "';";
-                    ResultSet movieRS = movieStatement.executeQuery(movieSQL);
-                    movieRS.next();
-                    String scYear = movieRS.getString("year");
-                    String scTitle = movieRS.getString("title");
-                    String scDirector = movieRS.getString("director");
-                    String scBanner = movieRS.getString("banner_url");
-                    Movie scMovie = new Movie(movieId, scYear, scTitle, scDirector, scBanner, movieQuantity);
+                    //If movie not found in shopping cart and quantity is > 0, then add it to the shopping cart
+                    if (movieFound == false && Integer.parseInt(movieQuantity) > 0) {
+                        //Create a movie object
+                        Statement movieStatement = dbcon.createStatement();
+                        String movieSQL = "select * from movies where id='" + movieId + "';";
+                        ResultSet movieRS = movieStatement.executeQuery(movieSQL);
+                        movieRS.next();
+                        String scYear = movieRS.getString("year");
+                        String scTitle = movieRS.getString("title");
+                        String scDirector = movieRS.getString("director");
+                        String scBanner = movieRS.getString("banner_url");
+                        Movie scMovie = new Movie(movieId, scYear, scTitle, scDirector, scBanner, movieQuantity);
 
-                    //Get the stars and genres
-                    PreparedStatement scGenreStatement, scStarsStatement;
-                    String scGenreQuery = "SELECT name FROM genres WHERE id IN (SELECT genre_id FROM genres_in_movies WHERE movie_id = ?);";
-                    String scStarsQuery = "SELECT first_name, last_name FROM stars WHERE id IN (SELECT star_id FROM stars_in_movies WHERE movie_id = ?);";
-                    scGenreStatement = dbcon.prepareStatement(scGenreQuery);
-                    scStarsStatement = dbcon.prepareStatement(scStarsQuery);
+                        //Get the stars and genres
+                        PreparedStatement scGenreStatement, scStarsStatement;
+                        String scGenreQuery = "SELECT name FROM genres WHERE id IN (SELECT genre_id FROM genres_in_movies WHERE movie_id = ?);";
+                        String scStarsQuery = "SELECT first_name, last_name FROM stars WHERE id IN (SELECT star_id FROM stars_in_movies WHERE movie_id = ?);";
+                        scGenreStatement = dbcon.prepareStatement(scGenreQuery);
+                        scStarsStatement = dbcon.prepareStatement(scStarsQuery);
 
-                    scGenreStatement.setString(1, movieId);
-                    ResultSet scGenreResultSet = scGenreStatement.executeQuery();
-                    while (scGenreResultSet.next()) {
-                        String scResultGenre = scGenreResultSet.getString("name");
-                        scMovie.genres.add(scResultGenre);
+                        scGenreStatement.setString(1, movieId);
+                        ResultSet scGenreResultSet = scGenreStatement.executeQuery();
+                        while (scGenreResultSet.next()) {
+                            String scResultGenre = scGenreResultSet.getString("name");
+                            scMovie.genres.add(scResultGenre);
+                        }
+
+                        scGenreResultSet.close();
+
+                        scStarsStatement.setString(1, movieId);
+                        ResultSet scStarsResultSet = scStarsStatement.executeQuery();
+                        while (scStarsResultSet.next()) {
+                            Star star = new Star();
+                            star.name = scStarsResultSet.getString("first_name") + " " + scStarsResultSet.getString("last_name");
+                            scMovie.stars.add(star);
+                        }
+                        scStarsResultSet.close();
+
+                        //Add the movie to the shopping cart
+                        shoppingCart.add(scMovie);
+
+                        movieStatement.close();
                     }
 
-                    scGenreResultSet.close();
-
-                    scStarsStatement.setString(1, movieId);
-                    ResultSet scStarsResultSet = scStarsStatement.executeQuery();
-                    while (scStarsResultSet.next()) {
-                        Star star = new Star();
-                        star.name = scStarsResultSet.getString("first_name") + " " + scStarsResultSet.getString("last_name");
-                        scMovie.stars.add(star);
-                    }
-                    scStarsResultSet.close();
-
-                    //Add the movie to the shopping cart
-                    shoppingCart.add(scMovie);
-
-                    movieStatement.close();
+                } catch (Exception e) {
+                    out.println("<script>alert('Please enter a valid number')</script>");
                 }
             }
 

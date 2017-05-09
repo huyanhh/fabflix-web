@@ -19,7 +19,7 @@
 
     //Check to see if the user has logged in. If not, redirect user to the login page.
     if (loggedIn == null) {
-        out.println("<script> window.location.replace('index.html'); </script>");
+        out.println("<script> window.location.replace('../index.html'); </script>");
     }
 
     //Get total movie quantity in shopping cart
@@ -74,8 +74,20 @@
         urlPage = "1";
     }
     if (urlNumPageResults != null){
-        urlParams.put("numPageResults",urlNumPageResults);
+        try {
+            if (Integer.parseInt(urlNumPageResults) >= 0) {
+                urlParams.put("numPageResults", urlNumPageResults);
+            } else {
+                urlParams.put("numPageResults","10");
+            }
+        } catch (Exception e) {
+            urlParams.put("numPageResults","10");
+        }
+    } else {
+        urlParams.put("numPageResults","10");
     }
+
+
 
 %>
 <!DOCTYPE html>
@@ -248,8 +260,9 @@
                                 out.println("<form action = '/servlet/ShoppingCart' method = 'get'>");
 
                                 int quant = 0;
-                                for (int j = 0; j < shoppingCart.size(); j++){
-                                    if (shoppingCart.get(j).id.equals(movie.id) && Integer.parseInt(shoppingCart.get(j).quantity) > 1){
+
+                                for (int j = 0; j < shoppingCart.size(); j++) {
+                                    if (shoppingCart.get(j).id.equals(movie.id) && Integer.parseInt(shoppingCart.get(j).quantity) > 1) {
                                         quant = Integer.parseInt(shoppingCart.get(j).quantity);
                                         break;
                                     }
@@ -292,22 +305,6 @@
                     </table>
                 </div>
 
-                <div class="anime-manga-search pb24">
-                    <div class="genre-link">
-                        <%
-                            Class.forName("com.mysql.jdbc.Driver").newInstance();
-                            Connection connection = DriverManager.getConnection("jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false", Constants.USER, Constants.PASSWORD);
-                            Statement select = connection.createStatement();
-                            ResultSet result = select.executeQuery("select *  from genres; ");
-
-                            //TODO
-
-                            result.close();
-                            select.close();
-                        %>
-                    </div>
-                </div>
-
             </div>
 
         </div><!-- end of contentHome -->
@@ -319,16 +316,6 @@
     <!-- end rightbody -->
 
 </div><!-- wrapper -->
-
-
-<div id="ad-skin-bg-right" class="ad-skin-side-outer ad-skin-side-bg bg-right">
-    <div id="ad-skin-right" class="ad-skin-side right" style="display: none;">
-        <div id="ad-skin-right-absolute-block">
-            <div id="ad-skin-right-fixed-block"></div>
-        </div>
-    </div>
-</div>
-</div><!-- #myanimelist -->
 
 <script>
     var header = {

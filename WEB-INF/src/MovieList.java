@@ -241,7 +241,10 @@ public class MovieList extends HttpServlet {
                         ResultSet starsResultSet = starsStatement.executeQuery();
                         while (starsResultSet.next()) {
                             Star star = new Star();
-                            star.name = starsResultSet.getString("first_name") + " " + starsResultSet.getString("last_name");
+                            String resultName = starsResultSet.getString("first_name") + " " + starsResultSet.getString("last_name");
+                            if (resultName.startsWith("none"))
+                                resultName = resultName.split(" ")[1];
+                            star.name = resultName;
                             star.id = starsResultSet.getString("id");
                             movie.stars.add(star);
                         }

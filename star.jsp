@@ -63,6 +63,9 @@
         String resultPhotoURL = rs.getString("photo_url");
         String resultDOB = rs.getString("dob");
 
+        if (resultName.startsWith("none"))
+            resultName = resultName.split(" ")[1];
+
         star.id = resultId;
         star.name = resultName;
         star.photoURL = resultPhotoURL;
@@ -183,7 +186,6 @@
                                                 }
                                             %>
 
-
                                         </td>
                                     </tr>
                                     </tbody>
@@ -205,14 +207,6 @@
 
     </div><!-- wrapper -->
 
-
-    <div id="ad-skin-bg-right" class="ad-skin-side-outer ad-skin-side-bg bg-right">
-        <div id="ad-skin-right" class="ad-skin-side right" style="display: none;">
-            <div id="ad-skin-right-absolute-block">
-                <div id="ad-skin-right-fixed-block"></div>
-            </div>
-        </div>
-    </div>
 </div><!-- #myanimelist -->
 
 </body>
