@@ -63,6 +63,13 @@
         <load-on-startup>5</load-on-startup>
     </servlet>
 
+    <servlet>
+        <servlet-name>MovieInsertServlet</servlet-name>
+        <servlet-class>MovieInsert</servlet-class>
+        <load-on-startup>5</load-on-startup>
+    </servlet>
+
+
     <!-- Servlet Mappings -->
 
     <servlet-mapping>
@@ -90,15 +97,20 @@
         <url-pattern>/servlet/Checkout</url-pattern>
     </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>MovieInsertServlet</servlet-name>
+        <url-pattern>/MovieInsert</url-pattern>
+    </servlet-mapping>
+
     <!-- To disable HTTP and only use HTTPS -->
-    <security-constraint>
-        <web-resource-collection>
-            <web-resource-name>HTTPSOnly</web-resource-name>
-            <url-pattern>/*</url-pattern>
-        </web-resource-collection>
-        <user-data-constraint>
-            <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-        </user-data-constraint>
-    </security-constraint>
+    <!--<security-constraint>-->
+        <!--<web-resource-collection>-->
+            <!--<web-resource-name>HTTPSOnly</web-resource-name>-->
+            <!--<url-pattern>/*</url-pattern>-->
+        <!--</web-resource-collection>-->
+        <!--<user-data-constraint>-->
+            <!--<transport-guarantee>CONFIDENTIAL</transport-guarantee>-->
+        <!--</user-data-constraint>-->
+    <!--</security-constraint>-->
 
 </web-app>

@@ -3,6 +3,12 @@
     <output-path>$PROJECT_DIR$/out/artifacts/ROOT_Web</output-path>
     <root id="archive" name="ROOT_Web.war">
       <element id="artifact" artifact-name="ROOT:Web exploded" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="lib">
+          <element id="library" level="project" name="javax.json-1.0" />
+          <element id="library" level="project" name="recaptcha4j-0.0.7" />
+        </element>
+      </element>
     </root>
   </artifact>
 </component>

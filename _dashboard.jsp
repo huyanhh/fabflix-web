@@ -6,6 +6,7 @@
 %>
 <%@ page import="movies.Constants" %>
 <%@ page import="java.io.PrintWriter" %>
+
 <%
   Class.forName("com.mysql.jdbc.Driver").newInstance();
 
@@ -21,7 +22,6 @@
     insertStar(response.getWriter(), connection, firstName, lastName, dob, photoURL);
     out.println("<script> window.location.replace('_dashboard.jsp'); </script>");
   }
-
 %>
 <%!
   // change to return just string
@@ -222,6 +222,70 @@
               </div>
             </div>
           </div>
+
+          <%--insert movie--%>
+          <div class="col-md-12">
+              <div class="card">
+                <div class="header">
+                  <h4 class="title">Insert a Movie into the Database</h4>
+                </div>
+                <div class="content">
+                  <form method="post" action="MovieInsert" name="add_movie">
+
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label>Title</label>
+                          <input type="text" class="form-control" placeholder="Ip Man 2" name="title" value="" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABHklEQVQ4EaVTO26DQBD1ohQWaS2lg9JybZ+AK7hNwx2oIoVf4UPQ0Lj1FdKktevIpel8AKNUkDcWMxpgSaIEaTVv3sx7uztiTdu2s/98DywOw3Dued4Who/M2aIx5lZV1aEsy0+qiwHELyi+Ytl0PQ69SxAxkWIA4RMRTdNsKE59juMcuZd6xIAFeZ6fGCdJ8kY4y7KAuTRNGd7jyEBXsdOPE3a0QGPsniOnnYMO67LgSQN9T41F2QGrQRRFCwyzoIF2qyBuKKbcOgPXdVeY9rMWgNsjf9ccYesJhk3f5dYT1HX9gR0LLQR30TnjkUEcx2uIuS4RnI+aj6sJR0AM8AaumPaM/rRehyWhXqbFAA9kh3/8/NvHxAYGAsZ/il8IalkCLBfNVAAAAABJRU5ErkJggg==&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label>Year</label>
+                          <input type="text" class="form-control" placeholder="2010" name="year" value="">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label>Director</label>
+                          <input type="text" class="form-control" placeholder="Michael Bay" name="director" value="">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label>Star First Name</label>
+                          <input type="text" class="form-control" placeholder="Donnie" name="first_name" value="">
+                        </div>
+                      </div>
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label>Star Last Name</label>
+                          <input type="text" class="form-control" placeholder="Yen" name="last_name" value="">
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="row">
+                      <div class="col-md-6">
+                        <div class="form-group">
+                          <label>Genre name</label>
+                          <input type="text" class="form-control" placeholder="Kung Fu" name="genre_name" value="">
+                        </div>
+                      </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-info btn-fill pull-right">Add Movie</button>
+                    <div class="clearfix"></div>
+                  </form>
+                </div>
+              </div>
+      </div>
 
           <%--metadata--%>
           <div class="col-md-10">
