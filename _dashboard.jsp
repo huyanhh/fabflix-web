@@ -1,418 +1,61 @@
-<%@ page import="java.sql.*,
-                 javax.sql.*,
-                 java.io.IOException,
-                 javax.servlet.*,
-                 javax.servlet.http.*"
-%>
-<%@ page import="movies.Constants" %>
-<%@ page import="java.io.PrintWriter" %>
-
-<%
-  Class.forName("com.mysql.jdbc.Driver").newInstance();
-
-  Connection connection = DriverManager.getConnection("jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false",
-      Constants.USER, Constants.PASSWORD);
-
-  String firstName = request.getParameter("first_name");
-  String lastName = request.getParameter("last_name");
-  String dob = request.getParameter("dob");
-  String photoURL = request.getParameter("photo_url");
-
-  if(request.getParameter("submitted") != null){
-    insertStar(response.getWriter(), connection, firstName, lastName, dob, photoURL);
-    out.println("<script> window.location.replace('_dashboard.jsp'); </script>");
-  }
-%>
-<%!
-  // change to return just string
-  private void insertStar(PrintWriter out, Connection connection, String firstName, String lastName, String dob, String photoURL) {
-    try {
-      //Declare variables
-      boolean dobUsed = false, photoURLUsed = false;
-
-      //Get name. If only 1 name provided, first name = "" and last name = name provided
-      String fullName = firstName + lastName;
-      if (fullName.length() == 0) {
-        out.println("<script>alert('Please provide a valid name!')</script>");
-        return;
-      } else {
-        if (lastName.equals("")) {
-          lastName = firstName;
-          firstName = "";
-        }
-      }
-      //Get date of birth and/or photo url. If user actually provided a dob and/or photoURL, then update dobUsed and photoURLUsed
-      if (dob.length() > 0) {
-        dobUsed = true;
-      }
-
-      if (photoURL.length() > 0) {
-        photoURLUsed = true;
-      }
-
-      //Store the star into the database based on the information the user provided.
-      Statement select = connection.createStatement();
-      int result = 0;
-      if (!dobUsed && !photoURLUsed) {
-        result = select.executeUpdate(String.format("insert into stars (first_name, last_name) values('%s','%s')", firstName, lastName));
-      } else if (dobUsed && !photoURLUsed) {
-        result = select.executeUpdate(String.format("insert into stars (first_name, last_name, dob) values('%s','%s','%s')", firstName, lastName, dob));
-      } else if (!dobUsed && photoURLUsed) {
-        result = select.executeUpdate(String.format("insert into stars (first_name, last_name, photo_url) values('%s','%s','%s')", firstName, lastName, photoURL));
-      } else {
-        result = select.executeUpdate(String.format("insert into stars (first_name, last_name, dob, photo_url) values('%s','%s','%s','%s')", firstName, lastName, dob, photoURL));
-      }
-
-      String message;
-      //Print out success or fail message based upon whether the user was successfully stored in the database or not
-      if (result == 1) {
-        message = String.format("You have successfully inserted %s %s!", firstName, lastName);
-      } else {
-        message = "You have failed to insert the star!";
-      }
-      out.println("<script>alert('" + message + "')</script>");
-    } catch (SQLException e) {
-      out.println("<script>alert('Star could not be inserted. Please try again.')</script>");
-    }
-  }
-
-%>
-<!doctype html>
-<html lang="en">
+<!DOCTYPE html>
+<html>
 <head>
-  <meta charset="utf-8"/>
-  <link rel="icon" type="image/png" href="resources/img/favicon.ico">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
-
-  <title>Light Bootstrap Dashboard by Creative Tim</title>
-
-  <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport'/>
-  <meta name="viewport" content="width=device-width"/>
-
-
-  <!-- Bootstrap core CSS     -->
-  <link href="resources/css/bootstrap.min.css" rel="stylesheet"/>
-
-  <!-- Animation library for notifications   -->
-  <link href="resources/css/animate.min.css" rel="stylesheet"/>
-
-  <!--  Light Bootstrap Table core CSS    -->
-  <link href="resources/css/light-bootstrap-dashboard.css" rel="stylesheet"/>
-
-  <!--     Fonts and icons     -->
-  <link href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css" rel="stylesheet">
-  <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300' rel='stylesheet' type='text/css'>
-  <link href="resources/css/pe-icon-7-stroke.css" rel="stylesheet"/>
-
+  <meta charset="UTF-8">
+  <title>Login</title>
+  <link rel="stylesheet" href="css/main.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" rel="stylesheet">
+  <script src='https://www.google.com/recaptcha/api.js'></script>
+  <script>
+      function onSubmit(token) {
+          document.getElementById("loginForm").submit();
+      }
+  </script>
 </head>
-<body>
+<body class="align">
+<h1>Fabflix</h1>
+<h2>Employee Login</h2>
+<div class="grid">
+  <form action = "/servlet/Login" method = "post" class="form login" id="loginForm">
 
-<div class="wrapper">
-  <div class="sidebar" data-color="purple" data-image="resources/img/sidebar-5.jpg">
-
-    <!--
-
-        Tip 1: you can change the color of the sidebar using: data-color="blue | azure | green | orange | red | purple"
-        Tip 2: you can also add an image using data-image tag
-
-    -->
-
-    <div class="sidebar-wrapper">
-      <div class="logo">
-        <a href="http://www.creative-tim.com" class="simple-text">
-          Fabflix Admin
-        </a>
-      </div>
-
-      <ul class="nav">
-        <li class="active">
-          <a href="_dashboard.jsp">
-            <i class="pe-7s-graph"></i>
-            <p>Dashboard</p>
-          </a>
-        </li>
-
-      </ul>
-    </div>
-  </div>
-
-  <div class="main-panel">
-    <nav class="navbar navbar-default navbar-fixed">
-      <div class="container-fluid">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle" data-toggle="collapse">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Dashboard</a>
-        </div>
-        <div class="collapse navbar-collapse">
-          <ul class="nav navbar-nav navbar-left">
-            <li>
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                <i class="fa fa-dashboard"></i>
-              </a>
-            </li>
-          </ul>
-
-          <ul class="nav navbar-nav navbar-right">
-            <li>
-              <a href="">
-                Account
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
-
-    <div class="content">
-      <div class="container-fluid">
-        <div class="row">
-          <%--insert star--%>
-          <div class="col-md-12">
-            <div class="card">
-              <div class="header">
-                <h4 class="title">Insert a Star into the Database</h4>
-              </div>
-              <div class="content">
-                <form method="post" action="_dashboard.jsp" name="add_star">
-
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label>First Name</label>
-                        <input type="text" class="form-control" placeholder="First Name" name="first_name" value="">
-                      </div>
-                    </div>
-                    <div class="col-md-6">
-                      <div class="form-group">
-                        <label>Last Name</label>
-                        <input type="text" class="form-control" placeholder="Last Name" name="last_name" value="">
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label>Photo URL (optional)</label>
-                        <input type="text" class="form-control" placeholder="https://google.com/img&=asdfqwe1234"
-                               name="photo_url" value="">
-                      </div>
-                    </div>
-                  </div>
-
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div class="form-group">
-                        <label>dob (optional). Format is YYYY-MM-DD</label>
-                        <input type="text" class="form-control" placeholder="2017-05-12" name="dob" value="">
-                      </div>
-                    </div>
-                  </div>
-
-                  <input type="hidden" name="submitted">
-                  <button type="submit" class="btn btn-info btn-fill pull-right">Add Star</button>
-                  <div class="clearfix"></div>
-                </form>
-              </div>
-            </div>
-          </div>
-
-          <%--insert movie--%>
-          <div class="col-md-12">
-              <div class="card">
-                <div class="header">
-                  <h4 class="title">Insert a Movie into the Database</h4>
-                </div>
-                <div class="content">
-                  <form method="post" action="MovieInsert" name="add_movie">
-
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label>Title</label>
-                          <input type="text" class="form-control" placeholder="Ip Man 2" name="title" value="" style="background-image: url(&quot;data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAABHklEQVQ4EaVTO26DQBD1ohQWaS2lg9JybZ+AK7hNwx2oIoVf4UPQ0Lj1FdKktevIpel8AKNUkDcWMxpgSaIEaTVv3sx7uztiTdu2s/98DywOw3Dued4Who/M2aIx5lZV1aEsy0+qiwHELyi+Ytl0PQ69SxAxkWIA4RMRTdNsKE59juMcuZd6xIAFeZ6fGCdJ8kY4y7KAuTRNGd7jyEBXsdOPE3a0QGPsniOnnYMO67LgSQN9T41F2QGrQRRFCwyzoIF2qyBuKKbcOgPXdVeY9rMWgNsjf9ccYesJhk3f5dYT1HX9gR0LLQR30TnjkUEcx2uIuS4RnI+aj6sJR0AM8AaumPaM/rRehyWhXqbFAA9kh3/8/NvHxAYGAsZ/il8IalkCLBfNVAAAAABJRU5ErkJggg==&quot;); background-repeat: no-repeat; background-attachment: scroll; background-size: 16px 18px; background-position: 98% 50%; cursor: auto;">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label>Year</label>
-                          <input type="text" class="form-control" placeholder="2010" name="year" value="">
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label>Director</label>
-                          <input type="text" class="form-control" placeholder="Michael Bay" name="director" value="">
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label>Star First Name</label>
-                          <input type="text" class="form-control" placeholder="Donnie" name="first_name" value="">
-                        </div>
-                      </div>
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label>Star Last Name</label>
-                          <input type="text" class="form-control" placeholder="Yen" name="last_name" value="">
-                        </div>
-                      </div>
-                    </div>
-
-                    <div class="row">
-                      <div class="col-md-6">
-                        <div class="form-group">
-                          <label>Genre name</label>
-                          <input type="text" class="form-control" placeholder="Kung Fu" name="genre_name" value="">
-                        </div>
-                      </div>
-                    </div>
-
-                    <button type="submit" class="btn btn-info btn-fill pull-right">Add Movie</button>
-                    <div class="clearfix"></div>
-                  </form>
-                </div>
-              </div>
-      </div>
-
-          <%--metadata--%>
-          <div class="col-md-10">
-            <div class="card">
-              <div class="header">
-                <h4 class="title">Metadata</h4>
-                <%--<p class="category">Credit Cards</p>--%>
-              </div>
-              <%--<div class="content table-responsive table-full-width">--%>
-                <%--<table class="table table-hover table-striped">--%>
-                  <%--<thead>--%>
-                  <%--<tr>--%>
-                    <%--<th>Name</th>--%>
-                    <%--<th>Datatype</th>--%>
-                  <%--</tr>--%>
-                  <%--</thead>--%>
-                  <%--<tbody>--%>
-                  <%--<tr>--%>
-                    <%--<td>first_name</td>--%>
-                    <%--<td>VARCHAR</td>--%>
-                  <%--</tr>--%>
-                  <%--</tbody>--%>
-                <%--</table>--%>
-              <%--</div>--%>
-              <%
-                String selectStatement = "SELECT * FROM ";
-                String[] tables = {"sales", "creditcards", "customers", "movies", "stars", "employees",
-                    "genres_in_movies", "stars_in_movies", "genres"};
-                try {
-                  Statement select = connection.createStatement();
-                  for (String table : tables) {
-                    ResultSet result = select.executeQuery(selectStatement + table);
-                    if (result.next()) {
-                      ResultSetMetaData metadata = result.getMetaData();
-                      int columns = metadata.getColumnCount();
-                      out.println(String.format("<div class=\"header\">" +
-                                                  "<p class=\"category\">%s</p>" +
-                                                "</div>",
-                          metadata.getTableName(1))
-                      );
-                      out.println(
-                          "<div class=\"content table-responsive table-full-width\">" +
-                            "<table class=\"table table-hover table-striped\">" +
-                              "<thead>" +
-                                "<tr>" +
-                                  "<th>Name</th>" +
-                                  "<th>Datatype</th>" +
-                                "</tr>" +
-                              "</thead>" +
-                              "<tbody>");
-                      for (int i = 1; i < columns; i++) {
-                          out.println(String.format(
-                              "<tr>" +
-                                "<td>%-15s</td>" +
-                                "<td>%s</td>" +
-                              "</tr>"
-                              ,metadata.getColumnName(i), metadata.getColumnTypeName(i))
-                          );
-                      }
-                      out.println(
-                                  "</tbody>" +
-                          "      </table>" +
-                          "     </div>"
-                      );
-                    }
-                  }
-                } catch (SQLException e) {
-                  out.println("<script>alert('There was an error retrieving the metadata')</script>");
-                }
-              %>
-
-            </div>
-          </div>
-
-        </div>
-
-      </div>
+    <div class="form__field">
+      <label for="login__username">
+        <svg class="icon">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#user"></use>
+        </svg>
+        <span class="hidden">Email</span></label>
+      <input id="login__email" type="text" name="email" class="form__input" placeholder="Email"
+             required>
     </div>
 
+    <div class="form__field">
+      <label for="login__password">
+        <svg class="icon">
+          <use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#lock"></use>
+        </svg>
+        <span class="hidden">Password</span></label>
+      <input id="login__password" type="password" name="password" class="form__input" placeholder="Password"
+             required>
+    </div>
 
-    <footer class="footer">
-      <div class="container-fluid">
-        <nav class="pull-left">
-          <ul>
-            <li>
-              <a href="#">
-                Home
-              </a>
-            </li>
+    <div class="form__field">
+      <input type = "submit" value = "Sign In">
+    </div>
+    <input type="hidden" name="employee">
 
-          </ul>
-        </nav>
-        <p class="copyright pull-right">
-          &copy;
-          <script>document.write(new Date().getFullYear())</script>
-          <a href="http://www.creative-tim.com">Creative Tim</a>, made with love for a better web
-        </p>
-      </div>
-    </footer>
-
-  </div>
+  </form>
 </div>
-
-
+<svg xmlns="http://www.w3.org/2000/svg" class="icons">
+  <symbol id="arrow-right" viewBox="0 0 1792 1792">
+    <path d="M1600 960q0 54-37 91l-651 651q-39 37-91 37-51 0-90-37l-75-75q-38-38-38-91t38-91l293-293H245q-52 0-84.5-37.5T128 1024V896q0-53 32.5-90.5T245 768h704L656 474q-38-36-38-90t38-90l75-75q38-38 90-38 53 0 91 38l651 651q37 35 37 90z"/>
+  </symbol>
+  <symbol id="lock" viewBox="0 0 1792 1792">
+    <path d="M640 768h512V576q0-106-75-181t-181-75-181 75-75 181v192zm832 96v576q0 40-28 68t-68 28H416q-40 0-68-28t-28-68V864q0-40 28-68t68-28h32V576q0-184 132-316t316-132 316 132 132 316v192h32q40 0 68 28t28 68z"/>
+  </symbol>
+  <symbol id="user" viewBox="0 0 1792 1792">
+    <path d="M1600 1405q0 120-73 189.5t-194 69.5H459q-121 0-194-69.5T192 1405q0-53 3.5-103.5t14-109T236 1084t43-97.5 62-81 85.5-53.5T538 832q9 0 42 21.5t74.5 48 108 48T896 971t133.5-21.5 108-48 74.5-48 42-21.5q61 0 111.5 20t85.5 53.5 62 81 43 97.5 26.5 108.5 14 109 3.5 103.5zm-320-893q0 159-112.5 271.5T896 896 624.5 783.5 512 512t112.5-271.5T896 128t271.5 112.5T1280 512z"/>
+  </symbol>
+</svg>
 </body>
-
-<!--   Core JS Files   -->
-<script src="resources/js/jquery-1.10.2.js" type="text/javascript"></script>
-<script src="resources/js/bootstrap.min.js" type="text/javascript"></script>
-
-<!--  Checkbox, Radio & Switch Plugins -->
-<script src="resources/js/bootstrap-checkbox-radio-switch.js"></script>
-
-<!--  Charts Plugin -->
-<script src="resources/js/chartist.min.js"></script>
-
-<!--  Notifications Plugin    -->
-<script src="resources/js/bootstrap-notify.js"></script>
-
-<!--  Google Maps Plugin    -->
-<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?sensor=false"></script>
-
-<!-- Light Bootstrap Table Core javascript and methods for Demo purpose -->
-<script src="resources/js/light-bootstrap-dashboard.js"></script>
-
-<!-- Light Bootstrap Table DEMO methods, don't include it in your project! -->
-<script src="resources/js/demo.js"></script>
-
-
 </html>

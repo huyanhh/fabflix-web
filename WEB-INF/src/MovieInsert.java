@@ -24,7 +24,7 @@ public class MovieInsert extends HttpServlet {
 
         if (title.equals("")) {
             out.println("<script> alert('Movie title cannot be blank!'); </script>");
-            out.println("<script> window.location.replace('./_dashboard.jsp'); </script>");
+            out.println("<script> window.location.replace('./dashboard.jsp'); </script>");
             return;
         }
 
@@ -73,7 +73,7 @@ public class MovieInsert extends HttpServlet {
         else
             out.println("<script> alert('Movie already exists'); </script>");
 
-        out.println("<script> window.location.replace('./_dashboard.jsp'); </script>");
+        out.println("<script> window.location.replace('./dashboard.jsp'); </script>");
     }
 
     public void doPost(HttpServletRequest request, HttpServletResponse response)

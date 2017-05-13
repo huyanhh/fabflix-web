@@ -32,7 +32,7 @@ public class VerifyUtils {
  
  
             // Data will be sent to the server.
-            String postParams = "secret=" + Constants.SECRET_KEY + "&response=" + gRecaptchaResponse;
+            String postParams = "secret=" + "poop" + "&response=" + gRecaptchaResponse;
  
             // Send Request
             conn.setDoOutput(true);
