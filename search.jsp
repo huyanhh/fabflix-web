@@ -85,11 +85,12 @@
                     <form id="advancedsearch" data-type="anime" method="GET" action="/servlet/MovieList"
                           class="js-advancedsearch" _lpchecked="1">
                         <div class="anime-search-form-block po-r">
-                            <div class="anime-search-form-search clearfix mb8"><input id="q" name="movieTitle" size="50"
-                                                                                      type="text" autocomplete="off"
-                                                                                      placeholder="Search By Title..."
-                                                                                      class="inputtext js-advancedSearchText">
+                            <div class="anime-search-form-search clearfix mb8">
+                                <input id="q" name="movieTitle" size="50" type="text" autocomplete="off" placeholder="Search By Title..." class="inputtext js-advancedSearchText" onkeyup="ajaxSearch(this.value)" style="border-radius:0px;">
                                 <input type="submit" value="Go" class="inputButton notActive">
+                            </div>
+                            <div style = "margin:0px auto;">
+                                <div id = "ajaxSearchResults" style="width:695px; margin-top:-8px;"></div>
                             </div>
                         </div>
                         <div id="advancedSearch" style="">
@@ -116,8 +117,8 @@
                                 </tbody>
                             </table>
 
-
                             <div class="mt8 mb24 pb16 ac"><input type="submit" value="Search" class="inputButton btn-form-submit notActive"></div>
+
                         </div>
                     </form>
 
@@ -127,6 +128,36 @@
     </div><!-- wrapper -->
 
 </div>
+
+<script language="javascript" type="text/javascript">
+
+    function ajaxSearch(searchValue) {
+        if (searchValue.length == 0) { 
+            document.getElementById("ajaxSearchResults").innerHTML = "";
+            document.getElementById("ajaxSearchResults").style.border = "0px";
+            return;
+        }
+        if (window.XMLHttpRequest) {
+            // code for IE7+, Firefox, Chrome, Opera, Safari
+            xmlhttp = new XMLHttpRequest();
+        } else {  // code for IE6, IE5
+            xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+        }
+        xmlhttp.onreadystatechange = function() {
+            if (this.readyState == 4 && this.status == 200) {
+                if (this.responseText.length > 0){
+                  document.getElementById("ajaxSearchResults").innerHTML = this.responseText;
+                  document.getElementById("ajaxSearchResults").style.border = "1px solid #A5ACB2";
+                  document.getElementById("ajaxSearchResults").style.borderTop = "0px";
+                  document.getElementById("ajaxSearchResults").style.padding = "10px";
+                  document.getElementById("ajaxSearchResults").style.fontSize = "medium";
+                }
+            }
+        }
+        xmlhttp.open("GET","/servlet/AjaxSearch?movieTitle=" + searchValue,true);
+        xmlhttp.send();
+    }
+</script>
 
 </body>
 </html>

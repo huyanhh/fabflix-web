@@ -21,6 +21,7 @@ public class Login extends HttpServlet {
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
+        /*
         //ReCaptcha Check
         String gRecaptchaResponse = request.getParameter("g-recaptcha-response");
         if (gRecaptchaResponse != null) {
@@ -33,6 +34,7 @@ public class Login extends HttpServlet {
                 return;
             }
         }
+        */
 
         String loginUser = Constants.USER;
         String loginPasswd = Constants.PASSWORD;

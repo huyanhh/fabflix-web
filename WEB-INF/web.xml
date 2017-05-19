@@ -69,6 +69,12 @@
         <load-on-startup>5</load-on-startup>
     </servlet>
 
+    <servlet>
+        <servlet-name>AjaxSearchServlet</servlet-name>
+        <servlet-class>AjaxSearch</servlet-class>
+        <load-on-startup>6</load-on-startup>
+    </servlet>
+
 
     <!-- Servlet Mappings -->
 
@@ -100,6 +106,11 @@
     <servlet-mapping>
         <servlet-name>MovieInsertServlet</servlet-name>
         <url-pattern>/MovieInsert</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AjaxSearchServlet</servlet-name>
+        <url-pattern>/servlet/AjaxSearch</url-pattern>
     </servlet-mapping>
 
     <!-- To disable HTTP and only use HTTPS -->
