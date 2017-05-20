@@ -18,6 +18,8 @@ public class Login extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException {
 
+        boolean mobile = request.getHeader("User-Agent").toLowerCase().contains("android");
+
         // Output stream to STDOUT
         PrintWriter out = response.getWriter();
 
@@ -51,6 +53,8 @@ public class Login extends HttpServlet {
             //Get POST variables
             String email = request.getParameter("email");
             String password = request.getParameter("password");
+            System.out.println(email);
+            System.out.println(password);
 
             String query;
 
@@ -68,10 +72,11 @@ public class Login extends HttpServlet {
             if (!isEmployee) {
                 //If the login information is incorrect, then an error is displayed and user is redirectd to login page
                 if (!rs.isBeforeFirst()) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     out.println("<script> alert('Incorrect login information!'); </script>");
                     out.println("<script> window.location.replace('../index.html'); </script>");
                 } else { //If the login is successful, a session is started and user is redirected to main page
-
+                    response.setStatus(HttpServletResponse.SC_ACCEPTED);
                     //Get user information from the customer's table
                     rs.next();
                     String customerId = rs.getString("ID");
@@ -87,18 +92,20 @@ public class Login extends HttpServlet {
                     session.setAttribute("customerLastName", customerLastName);
                     session.setAttribute("loggedIn", "true");
 
-                    //Redirect user to the main page
-                    out.println("<script> window.location.replace('../main.jsp'); </script>");
+                    if (!mobile)
+                        out.println("<script> window.location.replace('../main.jsp'); </script>");
+                    else
+                        out.println("success");
                 }
             } else {
                 if (!rs.isBeforeFirst()) {
+                    response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                     out.println("<script> alert('Incorrect login information!'); </script>");
                     out.println("<script> window.location.replace('../_dashboard.jsp'); </script>");
                 } else {
                     HttpSession session = request.getSession(true);
                     session.setAttribute("employeeLoggedIn", "true");
-
-                    //Redirect user to the main page
+                    response.setStatus(HttpServletResponse.SC_ACCEPTED);
                     out.println("<script> window.location.replace('../dashboard.jsp'); </script>");
                 }
             }
