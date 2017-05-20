@@ -157,6 +157,7 @@ public class MovieList extends HttpServlet {
                         newMovieTitle += splitTitle[i];
                         newMovieTitle += "* ";
                     }
+                    newMovieTitle.trim();
                     movieTitle = newMovieTitle;
                 }
 

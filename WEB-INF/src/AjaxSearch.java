@@ -68,6 +68,7 @@ public class AjaxSearch extends HttpServlet {
                 newMovieTitle += splitTitle[i];
                 newMovieTitle += "* ";
             }
+            newMovieTitle.trim();
             movieTitle = newMovieTitle;
 
             //Query database to find movie results with the corresponding title (Uses Full-Text search)
