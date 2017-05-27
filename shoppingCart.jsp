@@ -35,7 +35,7 @@
 <html>
 <head>
     <title>Shopping Cart</title>
-    <link rel="stylesheet" type="text/css" href="https://myanimelist.cdn-dena.com/static/assets/css/pc/style-cfe6975aa5.css">
+    <link rel="stylesheet" type="text/css" href="https://myanimelist.cdn-dena.com/static/assets/css/pc/style-0761696b57.css">
 </head>
 <body onload=" " class="page-common">
 <div id="myanimelist">
