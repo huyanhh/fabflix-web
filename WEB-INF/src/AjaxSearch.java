@@ -10,6 +10,8 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+
+
 public class AjaxSearch extends HttpServlet {
 
     public String getServletInfo() {
@@ -22,6 +24,8 @@ public class AjaxSearch extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException, ServletException
     {
+
+        boolean mobile = request.getHeader("User-Agent").toLowerCase().contains("android");
 
         //Start the session
         HttpSession session = request.getSession(true);
@@ -36,7 +40,7 @@ public class AjaxSearch extends HttpServlet {
         String loggedIn = (String)session.getAttribute("loggedIn");
 
         //Check to see if the user has logged in. If not, redirect user to the login page.
-        if (loggedIn == null){
+        if (!mobile && loggedIn == null){
             out.println("<script> window.location.replace('../index.html'); </script>");
         }
 
@@ -44,7 +48,10 @@ public class AjaxSearch extends HttpServlet {
         String loginPasswd = Constants.PASSWORD;
         String loginUrl = "jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false";
 
-        response.setContentType("text/html");    // Response mime type
+//        if (mobile)
+            response.setContentType("text/html");    // Response mime type
+//        else
+//            response.setContentType("application/json");
 
         try
         {
@@ -75,11 +82,21 @@ public class AjaxSearch extends HttpServlet {
             String query = "select * from movies where match(title) against('" + movieTitle + "' in boolean mode)";
             ResultSet rs = statement.executeQuery(query);
 
-            //Print movie results
-            while (rs.next()) {
-                String resultId = rs.getString("id");
-                String resultTitle = rs.getString("title");
-                out.println("<a href = 'movie.jsp?id=" + resultId + "'>" + resultTitle + "</a><br>");
+            if (mobile) {
+                // Output in JSON
+                while (rs.next()) {
+                    String resultTitle = rs.getString("title");
+//                    out.print(String.format("{\"titles\": [\"%s\"}", resultId, resultTitle));
+                    out.println(String.format("%s", resultTitle));
+                }
+            } else {
+                //Print movie results
+                while (rs.next()) {
+                    String resultId = rs.getString("id");
+                    String resultTitle = rs.getString("title");
+                    out.println("<a href = 'movie.jsp?id=" + resultId + "'>" + resultTitle + "</a><br>");
+                }
+
             }
 
             //Close result set
