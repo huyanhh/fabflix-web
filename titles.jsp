@@ -93,26 +93,27 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!--    <link rel="stylesheet" type="text/css" href="https://myanimelist.cdn-dena.com/static/assets/css/pc/style-cfe6975aa5.css">-->
+<!--    <link rel="stylesheet" type="text/css" href="https://myanimelist.cdn-dena.com/static/assets/css/pc/style-cfe6975aa5.css">-->
     <link rel="stylesheet" type="text/css" href="https://myanimelist.cdn-dena.com/static/assets/css/pc/style-0761696b57.css">
-
+    
     <script src="<%=request.getContextPath()%>/js/jquery-1.10.2.js" lang="javascript"></script>
     <script src="<%=request.getContextPath()%>/js/jquery-ui.js" lang="javascript"></script>-->
-
-
+    
+    
     <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/ui-darkness/jquery-ui.css" type="text/css" rel="stylesheet" >
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
     <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
     <script src="<%=request.getContextPath()%>/js/dialog.js" lang="javascript"></script>
-
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/js/jquery-ui.css">
+    
     <script>$(document).ready(function(){});</script>
+    
+    
+    
 
 
 
-
-
-
-
+    
 </head>
 
 <body onload=" " class="page-common">
@@ -185,9 +186,9 @@
                             %>
                         </tr>
                     </table>
-                </div>
+                </div>                
 
-
+                        
                 <div class="js-categories-seasonal js-block-list list">
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
                         <tbody>
@@ -252,7 +253,7 @@
 
                             if (movies.isEmpty())
                                 out.println("<tr><td class=\"borderClass bgColor0\" valign=\"top\" width=\"300\">" +
-                                    "No titles that matched your query were found</td></tr>");
+                                        "No titles that matched your query were found</td></tr>");
 
                             for (int i = offset; i < offset + itemsPerPage && i < movies.size(); i++){
                                 Movie movie = movies.get(i);
@@ -261,9 +262,9 @@
                                 out.println("<img width=\"50\" height=\"70\" border=\"0\" src=\"" + movie.bannerURL + "\">");
                                 out.println("</td>");
                                 out.println("<td class=\"borderClass bgColor0\" valign=\"top\">" +
-                                    "<a href=../movie.jsp?id=" + movie.id + ">" +
-                                    "<strong id='" + movie.id + "' onmouseover='popDialog(event)' onmouseout='removeDialog()'>" + movie.title + "(" + movie.id + ")" + "</strong>" +
-                                    "</a>" + "</td>");
+                                        "<a href=../movie.jsp?id=" + movie.id + ">" +
+                                        "<strong id='" + movie.id + "' onmouseover='popDialog(event)' onmouseout='removeDialog()'>" + movie.title + "(" + movie.id + ")" + "</strong>" +
+                                        "</a>" + "</td>");
 
 
                                 out.println("<td class=\"borderClass ac bgColor0\" width=\"45\">" + movie.year + "</td>");
@@ -276,7 +277,7 @@
                                 for (String genre : movie.genres)
                                     out.println(genre + "<br>");
                                 out.println("</td>");
-
+                                
                                 out.println("<td class=\"borderClass ac bgColor0\" width=\"40\">");
                                 out.println("<form action = '/servlet/ShoppingCart' method = 'get'>");
 
@@ -301,13 +302,13 @@
                                 out.println("<input type = 'hidden' value = 'true' name = 'movieList'>");
                                 out.println("</td><td class=\"borderClass ac bgColor0\" width=\"50\"> <input type = 'submit' value = 'Add to Cart'></form> </td>");
                                 out.println("</tr>");
-
-
+                                
+                                
                                 //add another form tag to implement shopping cart button
                                 //create divs which hold text data for title, director, stars, genres, banner, and an add to shopping cart button
                                 out.println("<div id='d" + movie.id + "' style='display: none;'>");
                                 out.println("<form action = '/servlet/ShoppingCart' method = 'get'>");
-
+                               
                                 out.println("<div>"+ "Title: " + movie.title +"</div>");
                                 out.println("<div>"+ "Director: " + movie.director +"</div>");
                                 out.println("<div>"+ "Year: " + movie.year +"</div>");
@@ -369,13 +370,13 @@
     var header = {
         alphabet: "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     };
-
+    
     function toggle_visibility(id) {
-        var e = document.getElementById(id);
-        if(e.style.display == 'block')
-            e.style.display = 'none';
-        else
-            e.style.display = 'block';
+       var e = document.getElementById(id);
+       if(e.style.display == 'block')
+          e.style.display = 'none';
+       else
+          e.style.display = 'block';
     }
 
     function makeUL(string) {
@@ -393,9 +394,9 @@
 
         return list;
     }
-
+    
     document.getElementById('horiznav_nav').appendChild(makeUL(header.alphabet));
-
+    
 </script>
 </body>
 </html>
