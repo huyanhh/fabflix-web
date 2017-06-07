@@ -87,6 +87,7 @@
                         <div class="anime-search-form-block po-r">
                             <div class="anime-search-form-search clearfix mb8">
                                 <input id="q" name="movieTitle" size="50" type="text" autocomplete="off" placeholder="Search By Title..." class="inputtext js-advancedSearchText" onkeyup="ajaxSearch(this.value)" style="border-radius:0px;">
+                                <input type="hidden" name="fromSearchPage" value="true"> 
                                 <input type="submit" value="Go" class="inputButton notActive">
                             </div>
                             <div style = "margin:0px auto;">
@@ -132,7 +133,7 @@
 <script language="javascript" type="text/javascript">
 
     function ajaxSearch(searchValue) {
-        if (searchValue.length == 0) { 
+        if (searchValue.length == 0) {
             document.getElementById("ajaxSearchResults").innerHTML = "";
             document.getElementById("ajaxSearchResults").style.border = "0px";
             return;
@@ -161,4 +162,3 @@
 
 </body>
 </html>
-

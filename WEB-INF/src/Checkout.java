@@ -14,6 +14,10 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
+
 public class Checkout extends HttpServlet {
 
     public String getServletInfo() {
@@ -44,19 +48,29 @@ public class Checkout extends HttpServlet {
             out.println("<script> window.location.replace('../index.html'); </script>");
         }
 
-        String loginUser = Constants.USER;
-        String loginPasswd = Constants.PASSWORD;
-        String loginUrl = "jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false";
-
         response.setContentType("text/html");    // Response mime type
 
         try
         {
-            //Class.forName("org.gjt.mm.mysql.Driver");
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            //Connection pooling
+            Context initCtx = new InitialContext();
+            if (initCtx == null)
+                out.println("initCtx is NULL");
 
-            //Connect to the database
-            Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            if (envCtx == null)
+                out.println("envCtx is NULL");
+
+            //Look up data source
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/TestDB");
+
+            //Establish connection with data source
+            if (ds == null)
+                out.println("ds is null.");
+
+            Connection dbcon = ds.getConnection();
+            if (dbcon == null)
+                out.println("dbcon is null.");
 
             //Get POST variables
             String creditCardNumber = request.getParameter("creditCardNumber");

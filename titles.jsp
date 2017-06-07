@@ -42,6 +42,7 @@
     String urlMethod = (String)session.getAttribute("method");
     String urlPage = (String)session.getAttribute("page");
     String urlNumPageResults = (String)session.getAttribute("numPageResults");
+    String urlFromSearchPage = (String)session.getAttribute("fromSearchPage");
 
     //Create a list of URL parameters
     HashMap<String,String> urlParams = new HashMap<String,String>();
@@ -86,6 +87,9 @@
     } else {
         urlParams.put("numPageResults","10");
     }
+    if (urlFromSearchPage != null){
+      urlParams.put("fromSearchPage",urlFromSearchPage);
+    }
 
 
 
@@ -94,7 +98,8 @@
 <html>
 <head>
     <!--<link rel="stylesheet" type="text/css" href="https://myanimelist.cdn-dena.com/static/assets/css/pc/style-cfe6975aa5.css">-->
-    <link rel="stylesheet" type="text/css" href="https://myanimelist.cdn-dena.com/static/assets/css/pc/style-0761696b57.css">
+    <!--<link rel="stylesheet" type="text/css" href="https://myanimelist.cdn-dena.com/static/assets/css/pc/style-0761696b57.css">-->
+    <link rel = "stylesheet" type = "text/css" href = "../css/mal.css">
 </head>
 
 <body onload=" " class="page-common">
@@ -181,6 +186,7 @@
                                 String directorInstance = request.getParameter("movieDirector");
                                 String starFirstNameInstance = request.getParameter("starFirstName");
                                 String starLastNameInstance = request.getParameter("starLastName");
+                                String fromSearchPage = request.getParameter("fromSearchPage");
 
                                 if (genreInstance != null) {
                                     options += "&movieGenre=" + genreInstance;
@@ -199,6 +205,9 @@
                                 }
                                 if (starLastNameInstance != null) {
                                     options += "&starLastName=" + starLastNameInstance;
+                                }
+                                if (fromSearchPage != null){
+                                  options += "&fromSearchPage=" + fromSearchPage;
                                 }
                             %>
                             <td class="borderClass bgColor1" valign="top" width="50"></td>

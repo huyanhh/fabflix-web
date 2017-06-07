@@ -6,6 +6,9 @@
 <%@ page import="movies.Movie" %>
 <%@ page import="movies.Constants" %>
 <%@ page import="movies.Star" %>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
+<%@ page import="javax.sql.DataSource" %>
 <%
 
     //Get session attributes
@@ -31,13 +34,25 @@
 
 %>
 <%
-    Class.forName("com.mysql.jdbc.Driver").newInstance();
+    //Connection pooling
+    Context initCtx = new InitialContext();
+    if (initCtx == null)
+        out.println("initCtx is NULL");
 
-    String loginUser = Constants.USER;
-    String loginPasswd = Constants.PASSWORD;
-    String loginUrl = "jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false";
+    Context envCtx = (Context) initCtx.lookup("java:comp/env");
+    if (envCtx == null)
+        out.println("envCtx is NULL");
 
-    Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+    //Look up data source
+    DataSource ds = (DataSource) envCtx.lookup("jdbc/TestDB");
+
+    //Establish connection with data source
+    if (ds == null)
+        out.println("ds is null.");
+
+    Connection dbcon = ds.getConnection();
+    if (dbcon == null)
+        out.println("dbcon is null.");
 
     response.setContentType("text/html");
 

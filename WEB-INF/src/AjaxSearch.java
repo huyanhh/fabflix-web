@@ -10,6 +10,10 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
+
 public class AjaxSearch extends HttpServlet {
 
     public String getServletInfo() {
@@ -40,22 +44,32 @@ public class AjaxSearch extends HttpServlet {
             out.println("<script> window.location.replace('../index.html'); </script>");
         }
 
-        String loginUser = Constants.USER;
-        String loginPasswd = Constants.PASSWORD;
-        String loginUrl = "jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false";
-
         response.setContentType("text/html");    // Response mime type
 
         try
         {
-            //Class.forName("org.gjt.mm.mysql.Driver");
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            //Connection pooling
+            Context initCtx = new InitialContext();
+            if (initCtx == null)
+                out.println("initCtx is NULL");
 
-            //Connect to the database
-            Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            if (envCtx == null)
+                out.println("envCtx is NULL");
 
-            //Declare statement
-            Statement statement = dbcon.createStatement();
+            //Look up data source
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/TestDB");
+
+            //Establish connection with data source
+            if (ds == null)
+                out.println("ds is null.");
+
+            Connection dbcon = ds.getConnection();
+            if (dbcon == null)
+                out.println("dbcon is null.");
+
+            //Declare Prepared Statement
+            PreparedStatement ps;
 
             //Store movie title passed as GET variable
             String movieTitle = request.getParameter("movieTitle");
@@ -64,29 +78,38 @@ public class AjaxSearch extends HttpServlet {
             String[] splitTitle = movieTitle.split("\\s+");
             String newMovieTitle = "";
             for (int i = 0; i < splitTitle.length; i++){
-                newMovieTitle += "+";
-                newMovieTitle += splitTitle[i];
-                newMovieTitle += "* ";
+                newMovieTitle += "+" + splitTitle[i];
+                if (i == splitTitle.length - 1){
+                  newMovieTitle += "*";
+                } else {
+                  newMovieTitle += " ";
+                }
             }
-            newMovieTitle.trim();
-            movieTitle = newMovieTitle;
 
             //Query database to find movie results with the corresponding title (Uses Full-Text search)
-            String query = "select * from movies where match(title) against('" + movieTitle + "' in boolean mode)";
-            ResultSet rs = statement.executeQuery(query);
+            String query = "select * from movies where match(title) against(? in boolean mode)";
+            ps = dbcon.prepareStatement(query);
+            ps.setString(1,newMovieTitle);
+            ResultSet rs = ps.executeQuery();
 
             //Print movie results
+            int resultCount = 0;
             while (rs.next()) {
                 String resultId = rs.getString("id");
                 String resultTitle = rs.getString("title");
                 out.println("<a href = 'movie.jsp?id=" + resultId + "'>" + resultTitle + "</a><br>");
+                resultCount++;
+            }
+
+            if (resultCount == 0){
+              out.println("No results found...");
             }
 
             //Close result set
             rs.close();
-            
-            //Close statement
-            statement.close();
+
+            //Close the Prepared Statement
+            ps.close();
 
             //Close database connection
             dbcon.close();

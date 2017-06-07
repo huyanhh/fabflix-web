@@ -5,6 +5,9 @@
  javax.servlet.*"
 %>
 <%@ page import="movies.Constants" %>
+<%@ page import="javax.naming.InitialContext" %>
+<%@ page import="javax.naming.Context" %>
+<%@ page import="javax.sql.DataSource" %>
 <%
 
     //Get session attributes
@@ -29,8 +32,26 @@
 <h1>Browse By movies.Movie Genres Page</h1>
 
 <%
-    Class.forName("com.mysql.jdbc.Driver").newInstance();
-    Connection connection = DriverManager.getConnection("jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false", Constants.USER, Constants.PASSWORD);
+    //Connection pooling
+    Context initCtx = new InitialContext();
+    if (initCtx == null)
+        out.println("initCtx is NULL");
+
+    Context envCtx = (Context) initCtx.lookup("java:comp/env");
+    if (envCtx == null)
+        out.println("envCtx is NULL");
+
+    //Look up data source
+    DataSource ds = (DataSource) envCtx.lookup("jdbc/TestDB");
+
+    //Establish connection with data source
+    if (ds == null)
+        out.println("ds is null.");
+
+    Connection connection = ds.getConnection();
+    if (connection == null)
+        out.println("connection is null.");
+        
     Statement select = connection.createStatement();
     ResultSet result = select.executeQuery("select *  from genres; ");
 

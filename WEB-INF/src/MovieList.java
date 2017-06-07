@@ -10,6 +10,10 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
+
 public class MovieList extends HttpServlet {
 
     public String getServletInfo() {
@@ -38,6 +42,7 @@ public class MovieList extends HttpServlet {
         session.removeAttribute("urlStarLastName");
         session.removeAttribute("method");
         session.removeAttribute("page");
+        session.removeAttribute("fromSearchPage");
         //session.removeAttribute("numPageResults");
 
         // Gets the page number you are currently on
@@ -69,24 +74,34 @@ public class MovieList extends HttpServlet {
             out.println("<script> window.location.replace('../index.html'); </script>");
         }
 
-        String loginUser = Constants.USER;
-        String loginPasswd = Constants.PASSWORD;
-        String loginUrl = "jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false";
-
         response.setContentType("text/html");    // Response mime type
 
         List<Movie> movies = new ArrayList<>();
 
         try
         {
-            //Class.forName("org.gjt.mm.mysql.Driver");
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            //Connection pooling
+            Context initCtx = new InitialContext();
+            if (initCtx == null)
+                out.println("initCtx is NULL");
 
-            //Connect to the database
-            Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            if (envCtx == null)
+                out.println("envCtx is NULL");
+
+            //Look up data source
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/TestDB");
+
+            //Establish connection with data source
+            if (ds == null)
+                out.println("ds is null.");
+
+            Connection dbcon = ds.getConnection();
+            if (dbcon == null)
+                out.println("dbcon is null.");
 
             //Declare statement
-            Statement statement = dbcon.createStatement();
+            PreparedStatement ps = null;
 
             //Get GET variables
             String movieTitle = request.getParameter("movieTitle");
@@ -95,6 +110,7 @@ public class MovieList extends HttpServlet {
             String movieDirector = request.getParameter("movieDirector");
             String starFirstName = request.getParameter("starFirstName");
             String starLastName = request.getParameter("starLastName");
+            String fromSearchPage = request.getParameter("fromSearchPage");
 
             String method = request.getParameter("method");
             request.setAttribute("method",method);
@@ -138,9 +154,12 @@ public class MovieList extends HttpServlet {
                 } else {
                     session.setAttribute("urlStarLastName",starLastName);
                 }
+                if (fromSearchPage != null){
+                  session.setAttribute("urlFromSearchPage",fromSearchPage);
+                }
 
                 //Append "%" to the end of each GET variable which will be used for LIKE in the query
-                movieTitle += "%";
+                //movieTitle += "%";
                 movieYear += "%";
                 movieGenre += "%";
                 movieDirector += "%";
@@ -148,95 +167,104 @@ public class MovieList extends HttpServlet {
                 starLastName += "%";
 
                 //Because title may have spaces, split by spaces, append a + to beginning of each string and * to end. Then append all
-                if (movieTitle.length() > 1){
-                    movieTitle = movieTitle.substring(0, movieTitle.length()-1); //remove the "%" from the end
-                    String[] splitTitle = movieTitle.split("\\s+");
-                    String newMovieTitle = "";
-                    for (int i = 0; i < splitTitle.length; i++){
-                        newMovieTitle += "+";
-                        newMovieTitle += splitTitle[i];
-                        newMovieTitle += "* ";
-                    }
-                    newMovieTitle.trim();
-                    movieTitle = newMovieTitle;
+                if (fromSearchPage != null){
+                  String[] splitTitle = movieTitle.split("\\s+");
+                  String newMovieTitle = "";
+                  for (int i = 0; i < splitTitle.length; i++){
+                      newMovieTitle += "+" + splitTitle[i];
+                      if (i == splitTitle.length - 1){
+                        newMovieTitle += "*";
+                      } else {
+                        newMovieTitle += " ";
+                      }
+                  }
+                  movieTitle = newMovieTitle;
+                } else {
+                  movieTitle += "%";
                 }
 
                 //Based on provided information, generate a query that can be executed to display movie results
-                String strToFormat = "", query = "";
+                String query = "";
 
                 //If the movieGenre has a length > 1 and no sort method apply do the standard genre search query
                 if (movieGenre.length() > 1 && (method == null || method.isEmpty())){
-                    strToFormat = "select * from movies where id in (select movie_id from genres_in_movies where genre_id in (select id from genres where name like '%s'));";
-                    query = String.format(strToFormat,movieGenre);
+                    query = "select * from movies where id in (select movie_id from genres_in_movies where genre_id in (select id from genres where name like ?));";
+                    ps = dbcon.prepareStatement(query);
+                    ps.setString(1,movieGenre);
                 } else if (movieGenre.length() > 1 && (method != null || !method.isEmpty())){
                     //changes the query for genre based on type of sort method applied
                     switch (method) {
                         case "AscTitle":
-                            strToFormat = "select * from movies where id in (select movie_id from genres_in_movies where genre_id in (select id from genres where name like '%s')) order by title;";
-                            query = String.format(strToFormat, movieGenre);
+                            query = "select * from movies where id in (select movie_id from genres_in_movies where genre_id in (select id from genres where name like ?)) order by title;";
                             break;
                         case "DescTitle":
-                            strToFormat = "select * from movies where id in (select movie_id from genres_in_movies where genre_id in (select id from genres where name like '%s')) order by title desc;";
-                            query = String.format(strToFormat, movieGenre);
+                            query = "select * from movies where id in (select movie_id from genres_in_movies where genre_id in (select id from genres where name like ?)) order by title desc;";
                             break;
                         case "AscYear":
-                            strToFormat = "select * from movies where id in (select movie_id from genres_in_movies where genre_id in (select id from genres where name like '%s')) order by year asc;";
-                            query = String.format(strToFormat, movieGenre);
+                            query = "select * from movies where id in (select movie_id from genres_in_movies where genre_id in (select id from genres where name like ?)) order by year asc;";
                             break;
                         case "DescYear":
-                            strToFormat = "select * from movies where id in (select movie_id from genres_in_movies where genre_id in (select id from genres where name like '%s')) order by year desc;";
-                            query = String.format(strToFormat, movieGenre);
+                            query = "select * from movies where id in (select movie_id from genres_in_movies where genre_id in (select id from genres where name like ?)) order by year desc;";
                             break;
                     }
+                    ps = dbcon.prepareStatement(query);
+                    ps.setString(1,movieGenre);
                 } else { //otherwise perform same query for search and browse by title
                     if (method == null || method.isEmpty()){
-                        if (movieTitle.length() == 1){
-                            strToFormat = "select * from movies where title like '%s' and year like '%s' and director like '%s' and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like '%s' and last_name like '%s'));";
+                        if (fromSearchPage == null){
+                            query = "select * from movies where title like ? and year like ? and director like ? and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like ? and last_name like ?));";
                         } else {
-                            strToFormat = "select * from movies where match(title) against('%s' in boolean mode) and year like '%s' and director like '%s' and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like '%s' and last_name like '%s'));";
+                            query = "select * from movies where match(title) against(? in boolean mode) and year like ? and director like ? and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like ? and last_name like ?));";
                         }
-                        query = String.format(strToFormat, movieTitle, movieYear, movieDirector, starFirstName, starLastName);
+                        ps = dbcon.prepareStatement(query);
+                        ps.setString(1,movieTitle);
+                        ps.setString(2,movieYear);
+                        ps.setString(3,movieDirector);
+                        ps.setString(4,starFirstName);
+                        ps.setString(5,starLastName);
                     } else {
                         //changes the search and browse by title query based on type of sort method applied
                         switch (method) {
                             case "AscTitle":
-                                if (movieTitle.length() == 1){
-                                    strToFormat = "select * from movies where title like '%s' and year like '%s' and director like '%s' and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like '%s' and last_name like '%s')) order by title;";
+                                if (fromSearchPage == null){
+                                    query = "select * from movies where title like ? and year like ? and director like ? and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like ? and last_name like ?)) order by title;";
                                 } else {
-                                    strToFormat = "select * from movies where match(title) against('%s' in boolean mode) and year like '%s' and director like '%s' and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like '%s' and last_name like '%s')) order by title;";
+                                    query = "select * from movies where match(title) against(? in boolean mode) and year like ? and director like ? and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like ? and last_name like ?)) order by title;";
                                 }
-                                query = String.format(strToFormat, movieTitle, movieYear, movieDirector, starFirstName, starLastName);
                                 break;
                             case "DescTitle":
-                                if (movieTitle.length() == 1){
-                                    strToFormat = "select * from movies where title like '%s' and year like '%s' and director like '%s' and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like '%s' and last_name like '%s')) order by title desc;";
+                                if (fromSearchPage == null){
+                                    query = "select * from movies where title like ? and year like ? and director like ? and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like ? and last_name like ?)) order by title desc;";
                                 } else {
-                                    strToFormat = "select * from movies where match(title) against('%s' in boolean mode) and year like '%s' and director like '%s' and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like '%s' and last_name like '%s')) order by title desc;";
+                                    query = "select * from movies where match(title) against(? in boolean mode) and year like ? and director like ? and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like ? and last_name like ?)) order by title desc;";
                                 }
-                                query = String.format(strToFormat, movieTitle, movieYear, movieDirector, starFirstName, starLastName);
                                 break;
                             case "AscYear":
-                                if (movieTitle.length() == 1){
-                                    strToFormat = "select * from movies where title like '%s' and year like '%s' and director like '%s' and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like '%s' and last_name like '%s')) order by year asc;";
+                                if (fromSearchPage == null){
+                                    query = "select * from movies where title like ? and year like ? and director like ? and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like ? and last_name like ?)) order by year asc;";
                                 } else {
-                                    strToFormat = "select * from movies where match(title) against('%s' in boolean mode) and year like '%s' and director like '%s' and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like '%s' and last_name like '%s')) order by year asc;";
+                                    query = "select * from movies where match(title) against(? in boolean mode) and year like ? and director like ? and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like ? and last_name like ?)) order by year asc;";
                                 }
-                                query = String.format(strToFormat, movieTitle, movieYear, movieDirector, starFirstName, starLastName);
                                 break;
                             case "DescYear":
-                                if (movieTitle.length() == 1){
-                                    strToFormat = "select * from movies where title like '%s' and year like '%s' and director like '%s' and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like '%s' and last_name like '%s')) order by year desc;";
+                                if (fromSearchPage == null){
+                                    query = "select * from movies where title like ? and year like ? and director like ? and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like ? and last_name like ?)) order by year desc;";
                                 } else {
-                                    strToFormat = "select * from movies where match(title) against('%s' in boolean mode) and year like '%s' and director like '%s' and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like '%s' and last_name like '%s')) order by year desc;";
+                                    query = "select * from movies where match(title) against(? in boolean mode) and year like ? and director like ? and id in (select movie_id from stars_in_movies where star_id in (select id from stars where first_name like ? and last_name like ?)) order by year desc;";
                                 }
-                                query = String.format(strToFormat, movieTitle, movieYear, movieDirector, starFirstName, starLastName);
                                 break;
                         }
+                        ps = dbcon.prepareStatement(query);
+                        ps.setString(1,movieTitle);
+                        ps.setString(2,movieYear);
+                        ps.setString(3,movieDirector);
+                        ps.setString(4,starFirstName);
+                        ps.setString(5,starLastName);
                     }
                 }
 
                 //Execute the query
-                ResultSet rs = statement.executeQuery(query);
+                ResultSet rs = ps.executeQuery();
 
                 //If no movie results returned, inform the user
                 if (!rs.isBeforeFirst()) {
@@ -292,13 +320,15 @@ public class MovieList extends HttpServlet {
                     starsStatement.close();
                 }
 
-                //Close ResultSet, Statement, and Connection to Database
+                //Close ResultSet, Prepared Statement, and Connection to Database
                 rs.close();
                 //System.out.println("movies = " + movies);
                 request.setAttribute("movies", movies);
                 request.getRequestDispatcher("/titles.jsp").forward(request, response);
             }
-            statement.close();
+            if (ps != null){
+              ps.close();
+            }
             dbcon.close();
         }
         catch (SQLException ex) {

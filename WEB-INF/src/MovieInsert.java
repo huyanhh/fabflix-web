@@ -6,6 +6,10 @@ import java.util.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
+
 public class MovieInsert extends HttpServlet {
 
     public void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -28,16 +32,27 @@ public class MovieInsert extends HttpServlet {
             return;
         }
 
-        String loginUser = Constants.USER;
-        String loginPasswd = Constants.PASSWORD;
-        String loginUrl = "jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false";
-
         try {
 
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
+            //Connection pooling
+            Context initCtx = new InitialContext();
+            if (initCtx == null)
+                out.println("initCtx is NULL");
 
-            //Connect to the database
-            Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            if (envCtx == null)
+                out.println("envCtx is NULL");
+
+            //Look up data source
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/TestDB");
+
+            //Establish connection with data source
+            if (ds == null)
+                out.println("ds is null.");
+
+            Connection dbcon = ds.getConnection();
+            if (dbcon == null)
+                out.println("dbcon is null.");
 
             CallableStatement cs = dbcon.prepareCall("{call add_movie(?, ?, ?, ?, ?, ?)}");
 

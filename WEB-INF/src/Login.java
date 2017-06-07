@@ -8,6 +8,10 @@ import java.sql.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import javax.naming.InitialContext;
+import javax.naming.Context;
+import javax.sql.DataSource;
+
 public class Login extends HttpServlet {
     public String getServletInfo() {
         return "Servlet connects to MySQL database and determines if login information is correct";
@@ -36,17 +40,30 @@ public class Login extends HttpServlet {
         }
         */
 
-        String loginUser = Constants.USER;
-        String loginPasswd = Constants.PASSWORD;
-        String loginUrl = "jdbc:mysql:///moviedb?autoReconnect=true&useSSL=false";
-
         response.setContentType("text/html");    // Response mime type
 
         try {
-            //Class.forName("org.gjt.mm.mysql.Driver");
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
 
-            Connection dbcon = DriverManager.getConnection(loginUrl, loginUser, loginPasswd);
+            //Connection pooling
+            Context initCtx = new InitialContext();
+            if (initCtx == null)
+                out.println("initCtx is NULL");
+
+            Context envCtx = (Context) initCtx.lookup("java:comp/env");
+            if (envCtx == null)
+                out.println("envCtx is NULL");
+
+            //Look up data source
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/TestDB");
+
+            //Establish connection with data source
+            if (ds == null)
+                out.println("ds is null.");
+
+            Connection dbcon = ds.getConnection();
+            if (dbcon == null)
+                out.println("dbcon is null.");
+
             //Declare our statement
             Statement statement = dbcon.createStatement();
 
