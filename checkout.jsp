@@ -39,7 +39,7 @@
 <body>
 
 <div style = "margin-top:100px;">
-    <div style = "margin:0px auto; width:500px;">
+    <div style = "margin:0px auto; width:500px; text-align:center;">
         <h2> Customer Information </h2>
         <div style = "margin:0px auto; width:330px; border:1px solid #cfcfcf; border-radius:5px; padding:15px 15px 15px 15px;">
             <form action = "/servlet/Checkout" method="post">

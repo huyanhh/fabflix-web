@@ -101,6 +101,8 @@
         message = "You have failed to insert the star!";
       }
       out.println("<script>alert('" + message + "')</script>");
+      //Close Statement
+      select.close();
     } catch (SQLException e) {
       out.println("<script>alert('Star could not be inserted. Please try again.')</script>");
     }
@@ -345,9 +347,11 @@
                 String[] tables = {"sales", "creditcards", "customers", "movies", "stars", "employees",
                     "genres_in_movies", "stars_in_movies", "genres"};
                 try {
-                  Statement select = connection.createStatement();
+                  PreparedStatement ps = null;
                   for (String table : tables) {
-                    ResultSet result = select.executeQuery(selectStatement + table);
+                    String psQuery = selectStatement + table;
+                    ps = connection.prepareStatement(psQuery);
+                    ResultSet result = ps.executeQuery();
                     if (result.next()) {
                       ResultSetMetaData metadata = result.getMetaData();
                       int columns = metadata.getColumnCount();
@@ -381,6 +385,9 @@
                               "     </div>"
                       );
                     }
+                  }
+                  if (ps != null){
+                    ps.close();
                   }
                 } catch (SQLException e) {
                   out.println("<script>alert('There was an error retrieving the metadata')</script>");

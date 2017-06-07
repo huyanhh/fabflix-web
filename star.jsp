@@ -56,13 +56,15 @@
 
     response.setContentType("text/html");
 
-    Statement statement = dbcon.createStatement();
+    PreparedStatement ps;
 
     String starID = request.getParameter("id");
 
-    String query = String.format("select CONCAT(first_name, \" \", last_name) as full_name, id, photo_url, dob from stars where id = %s;", starID);
+    String query = "select CONCAT(first_name, \" \", last_name) as full_name, id, photo_url, dob from stars where id = ?;";
 
-    ResultSet rs = statement.executeQuery(query);
+    ps = dbcon.prepareStatement(query);
+    ps.setString(1,starID);
+    ResultSet rs = ps.executeQuery();
 
     PreparedStatement movieStatement;
     String movieQuery = "SELECT banner_url, title, id from movies WHERE id in (select movie_id FROM stars_in_movies WHERE star_id = ?);";
@@ -102,6 +104,7 @@
 
     //Close prepared statements
     movieStatement.close();
+    ps.close();
 %>
 <!DOCTYPE html>
 <html>

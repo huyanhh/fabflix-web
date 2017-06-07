@@ -98,13 +98,18 @@ public class Checkout extends HttpServlet {
             }
 
             //Create a statement
-            Statement statement = dbcon.createStatement();
+            PreparedStatement ps1;
 
             //Query to execute
-            String query = "SELECT * from creditcards where id = '" + creditCardNumber + "' and expiration = '" + expirationDate + "' and first_name='" + firstNameOnCard + "' and last_name = '" + lastNameOnCard + "';";
+            String query = "SELECT * from creditcards where id = ? and expiration = ? and first_name= ? and last_name = ?;";
 
             //Execute the query
-            ResultSet rs = statement.executeQuery(query);
+            ps1 = dbcon.prepareStatement(query);
+            ps1.setString(1,creditCardNumber);
+            ps1.setString(2,expirationDate);
+            ps1.setString(3,firstNameOnCard);
+            ps1.setString(4,lastNameOnCard);
+            ResultSet rs = ps1.executeQuery();
 
             if (!rs.isBeforeFirst() ) {
                 out.println("<script> alert('Incorrect credit card information!'); </script>");
@@ -142,7 +147,7 @@ public class Checkout extends HttpServlet {
             }
 
             //Close the statement
-            statement.close();
+            ps1.close();
 
             //Close database connection
             dbcon.close();

@@ -58,13 +58,15 @@
 
     response.setContentType("text/html");
 
-    Statement statement = dbcon.createStatement();
+    PreparedStatement ps;
 
     String movieID = request.getParameter("id");
 
-    String query = String.format("SELECT * FROM movies WHERE id=%s;", movieID);
+    String query = "SELECT * FROM movies WHERE id=?;";
 
-    ResultSet rs = statement.executeQuery(query);
+    ps = dbcon.prepareStatement(query);
+    ps.setString(1,movieID);
+    ResultSet rs = ps.executeQuery();
 
     PreparedStatement genreStatement, starsStatement;
     String genreQuery = "select name from genres where id in (select genre_id from genres_in_movies where movie_id = ?);";
@@ -117,6 +119,7 @@
     //Close prepared statements
     genreStatement.close();
     starsStatement.close();
+    ps.close();
 %>
 <!DOCTYPE html>
 <html>

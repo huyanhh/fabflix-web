@@ -67,13 +67,13 @@ public class Login extends HttpServlet {
                 out.println("dbcon is null.");
 
             //Declare our statement
-            Statement statement = dbcon.createStatement();
+            PreparedStatement ps;
 
             //Get POST variables
             String email = request.getParameter("email");
             String password = request.getParameter("password");
-            System.out.println(email);
-            System.out.println(password);
+            //System.out.println(email);
+            //System.out.println(password);
 
             String query;
 
@@ -81,12 +81,15 @@ public class Login extends HttpServlet {
 
             //Query to execute
             if (isEmployee)
-                query = "SELECT * from employees where email = '" + email + "' and password = '" + password + "';";
+                query = "SELECT * from employees where email = ? and password = ?;";
             else
-                query = "SELECT * from customers where email = '" + email + "' and password = '" + password + "';";
+                query = "SELECT * from customers where email = ? and password = ?;";
 
             //Execute the query
-            ResultSet rs = statement.executeQuery(query);
+            ps = dbcon.prepareStatement(query);
+            ps.setString(1,email);
+            ps.setString(2,password);
+            ResultSet rs = ps.executeQuery();
 
             if (!isEmployee) {
                 //If the login information is incorrect, then an error is displayed and user is redirectd to login page
@@ -131,7 +134,7 @@ public class Login extends HttpServlet {
 
             //Close ResultSet, Statement, and Connection to Database
             rs.close();
-            statement.close();
+            ps.close();
             dbcon.close();
         } catch (SQLException ex) {
             while (ex != null) {

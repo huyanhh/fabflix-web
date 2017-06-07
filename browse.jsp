@@ -111,8 +111,10 @@
                             if (connection == null)
                                 out.println("connection is null.");
 
-                            Statement select = connection.createStatement();
-                            ResultSet result = select.executeQuery("select *  from genres; ");
+                            PreparedStatement ps;
+                            String psQuery = "select * from genres;";
+                            ps = connection.prepareStatement(psQuery);
+                            ResultSet result = ps.executeQuery();
                             int col = 0;
                             out.println("<div class=\"genre-list-col\">");
 
@@ -130,7 +132,7 @@
                             out.println("</div>");
 
                             result.close();
-                            select.close();
+                            ps.close();
 
                         %>
                         </div>

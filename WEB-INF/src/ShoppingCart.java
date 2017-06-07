@@ -82,6 +82,7 @@ public class ShoppingCart extends HttpServlet {
             String method = request.getParameter("method");
             String page = request.getParameter("page");
             String numPageResults = request.getParameter("numPageResults");
+            String fromSearchPage = request.getParameter("fromSearchPage");
 
             //Add items to shopping cart if movieId and movieQuantity are both not null (they are in the url as parameters)
             if (movieId != null && movieQuantity != null) {
@@ -112,9 +113,11 @@ public class ShoppingCart extends HttpServlet {
                     //If movie not found in shopping cart and quantity is > 0, then add it to the shopping cart
                     if (movieFound == false && Integer.parseInt(movieQuantity) > 0) {
                         //Create a movie object
-                        Statement movieStatement = dbcon.createStatement();
-                        String movieSQL = "select * from movies where id='" + movieId + "';";
-                        ResultSet movieRS = movieStatement.executeQuery(movieSQL);
+                        PreparedStatement moviePS;
+                        String movieSQL = "select * from movies where id=?;";
+                        moviePS = dbcon.prepareStatement(movieSQL);
+                        moviePS.setString(1,movieId);
+                        ResultSet movieRS = moviePS.executeQuery();
                         movieRS.next();
                         String scYear = movieRS.getString("year");
                         String scTitle = movieRS.getString("title");
@@ -150,7 +153,7 @@ public class ShoppingCart extends HttpServlet {
                         //Add the movie to the shopping cart
                         shoppingCart.add(scMovie);
 
-                        movieStatement.close();
+                        moviePS.close();
                     }
 
                 } catch (Exception e) {
@@ -192,6 +195,9 @@ public class ShoppingCart extends HttpServlet {
                 }
                 if (numPageResults != null){
                     urlParams.put("numPageResults",numPageResults);
+                }
+                if (fromSearchPage != null){
+                  urlParams.put("fromSearchPage",fromSearchPage);
                 }
                 String url = "../servlet/MovieList?";
                 int count = 0;

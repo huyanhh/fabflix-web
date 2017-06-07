@@ -51,9 +51,11 @@
     Connection connection = ds.getConnection();
     if (connection == null)
         out.println("connection is null.");
-        
-    Statement select = connection.createStatement();
-    ResultSet result = select.executeQuery("select *  from genres; ");
+
+    PreparedStatement ps;
+    String query = "select * from genres;";
+    ps = dbcon.prepareStatement(query);
+    ResultSet result = select.executeQuery();
 
     while (result.next()){
         String genre = result.getString("name");
@@ -61,7 +63,7 @@
     }
 
     result.close();
-    select.close();
+    ps.close();
 
 %>
 
