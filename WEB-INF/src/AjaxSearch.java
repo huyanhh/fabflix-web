@@ -27,6 +27,8 @@ public class AjaxSearch extends HttpServlet {
             throws IOException, ServletException
     {
 
+        boolean mobile = request.getHeader("User-Agent").toLowerCase().contains("android");
+
         //Start the session
         HttpSession session = request.getSession(true);
 
@@ -40,7 +42,7 @@ public class AjaxSearch extends HttpServlet {
         String loggedIn = (String)session.getAttribute("loggedIn");
 
         //Check to see if the user has logged in. If not, redirect user to the login page.
-        if (loggedIn == null){
+        if (!mobile && loggedIn == null){
             out.println("<script> window.location.replace('../index.html'); </script>");
         }
 
@@ -92,17 +94,24 @@ public class AjaxSearch extends HttpServlet {
             ps.setString(1,newMovieTitle);
             ResultSet rs = ps.executeQuery();
 
-            //Print movie results
-            int resultCount = 0;
-            while (rs.next()) {
-                String resultId = rs.getString("id");
-                String resultTitle = rs.getString("title");
-                out.println("<a href = 'movie.jsp?id=" + resultId + "'>" + resultTitle + "</a><br>");
-                resultCount++;
-            }
+            if (mobile) {
+                // Output in JSON
+                while (rs.next()) {
+                    String resultTitle = rs.getString("title");
+                    out.println(String.format("%s", resultTitle));
+                }
+            } else {
+                int resultCount = 0;
+                while (rs.next()) {
+                    String resultId = rs.getString("id");
+                    String resultTitle = rs.getString("title");
+                    out.println("<a href = 'movie.jsp?id=" + resultId + "'>" + resultTitle + "</a><br>");
+                    resultCount++;
+                }
 
-            if (resultCount == 0){
-              out.println("No results found...");
+                if (resultCount == 0){
+                  out.println("No results found...");
+                }
             }
 
             //Close result set

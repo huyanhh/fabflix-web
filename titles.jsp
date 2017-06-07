@@ -97,9 +97,18 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <!--<link rel="stylesheet" type="text/css" href="https://myanimelist.cdn-dena.com/static/assets/css/pc/style-cfe6975aa5.css">-->
-    <!--<link rel="stylesheet" type="text/css" href="https://myanimelist.cdn-dena.com/static/assets/css/pc/style-0761696b57.css">-->
     <link rel = "stylesheet" type = "text/css" href = "../css/mal.css">
+
+    <script src="<%=request.getContextPath()%>/js/jquery-1.10.2.js" lang="javascript"></script>
+    <script src="<%=request.getContextPath()%>/js/jquery-ui.js" lang="javascript"></script>
+
+    <link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/ui-darkness/jquery-ui.css" type="text/css" rel="stylesheet" >
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.8/jquery.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/jquery-ui.min.js"></script>
+    <script src="<%=request.getContextPath()%>/js/dialog.js" lang="javascript"></script>
+    <link rel="stylesheet" type="text/css" href="<%=request.getContextPath()%>/js/jquery-ui.css">
+
+    <script>$(document).ready(function(){});</script>
 </head>
 
 <body onload=" " class="page-common">
@@ -173,6 +182,7 @@
                         </tr>
                     </table>
                 </div>
+
 
                 <div class="js-categories-seasonal js-block-list list">
                     <table border="0" cellpadding="0" cellspacing="0" width="100%">
@@ -252,8 +262,9 @@
                                 out.println("</td>");
                                 out.println("<td class=\"borderClass bgColor0\" valign=\"top\">" +
                                         "<a href=../movie.jsp?id=" + movie.id + ">" +
-                                        "<strong>" + movie.title + " (" + movie.id + ")" + "</strong>" +
+                                        "<strong id='" + movie.id + "' onmouseover='popDialog(event)' onmouseout='removeDialog()'>" + movie.title + "(" + movie.id + ")" + "</strong>" +
                                         "</a>" + "</td>");
+
 
                                 out.println("<td class=\"borderClass ac bgColor0\" width=\"45\">" + movie.year + "</td>");
                                 out.println("<td class=\"borderClass ac bgColor0\" width=\"100\">" + movie.director + "</td>");
@@ -265,10 +276,12 @@
                                 for (String genre : movie.genres)
                                     out.println(genre + "<br>");
                                 out.println("</td>");
+
                                 out.println("<td class=\"borderClass ac bgColor0\" width=\"40\">");
                                 out.println("<form action = '/servlet/ShoppingCart' method = 'get'>");
 
-                                int quant = 0;
+//                              changed to 1 as default. Shouldn't affect code logic and sets default in dialog box to 1
+                                int quant = 1;
 
                                 for (int j = 0; j < shoppingCart.size(); j++) {
                                     if (shoppingCart.get(j).id.equals(movie.id) && Integer.parseInt(shoppingCart.get(j).quantity) > 1) {
@@ -288,6 +301,32 @@
                                 out.println("<input type = 'hidden' value = 'true' name = 'movieList'>");
                                 out.println("</td><td class=\"borderClass ac bgColor0\" width=\"50\"> <input type = 'submit' value = 'Add to Cart'></form> </td>");
                                 out.println("</tr>");
+
+
+                                //add another form tag to implement shopping cart button
+                                //create divs which hold text data for title, director, stars, genres, banner, and an add to shopping cart button
+                                out.println("<div id='d" + movie.id + "' style='display: none;'>");
+                                out.println("<form action = '/servlet/ShoppingCart' method = 'get'>");
+
+                                out.println("<div>"+ "Title: " + movie.title +"</div>");
+                                out.println("<div>"+ "Director: " + movie.director +"</div>");
+                                out.println("<div>"+ "Year: " + movie.year +"</div>");
+                                for(Star star: movie.stars){
+                                    out.println("<div>"+ "Stars: " + star.name + "</div>");
+                                }
+                                for (String g: movie.genres){
+                                    out.println("<div>"+ "Genre: " + g + "</div>");
+                                }
+                                out.println("<div>"+ "Banner_url: " + movie.bannerURL + "</div>");
+
+
+                                //takes the inputs for add to shopping card and sends it to the shopping cart servlet when an action occurs like pressing a button
+                                out.println("<input type = 'submit' value='addToCart' />");
+                                out.println("<input type = 'hidden' name='movieId' value='" + movie.id + "' />");
+                                out.println("<input type = 'text' name='movieQuantity' value='" + quant + "' />");
+
+                                out.println("</form>");
+                                out.println("</div>");
                             }
                         %>
                         <span style="padding: 2px; background-color: rgba(192,198,255,0.59)">
@@ -331,6 +370,14 @@
         alphabet: "1234567890ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     };
 
+    function toggle_visibility(id) {
+       var e = document.getElementById(id);
+       if(e.style.display == 'block')
+          e.style.display = 'none';
+       else
+          e.style.display = 'block';
+    }
+
     function makeUL(string) {
         var list = document.createElement('ul');
 
@@ -346,7 +393,9 @@
 
         return list;
     }
+
     document.getElementById('horiznav_nav').appendChild(makeUL(header.alphabet));
+
 </script>
 </body>
 </html>
