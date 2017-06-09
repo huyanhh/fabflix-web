@@ -58,7 +58,7 @@ public class ShoppingCart extends HttpServlet {
                 out.println("envCtx is NULL");
 
             //Look up data source
-            DataSource ds = (DataSource) envCtx.lookup("jdbc/TestDB");
+            DataSource ds = (DataSource) envCtx.lookup("jdbc/WriteDB");
 
             //Establish connection with data source
             if (ds == null)

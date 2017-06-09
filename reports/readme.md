@@ -5,7 +5,7 @@ javac -classpath "../lib/mysql-connector-java-5.1.4:../lib/servlet-api.jar:." Mo
 ```
 
 ```apple js
-jar -cvf fabflix.war * 
+jar -cvf ROOT.war * 
 ```
 
 to compile, you must be in the /src/ folder. when you download the .war file, rename it to ROOT,
